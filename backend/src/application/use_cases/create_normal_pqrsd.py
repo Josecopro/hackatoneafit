@@ -9,7 +9,7 @@ class CreateNormalPqrsdUseCase:
 
     async def execute(
         self, *, tracking_id: str, payload: dict, attachments: list[dict]
-    ) -> None:
+    ) -> dict:
         record = {
             "tracking_id": tracking_id,
             "request_type": "normal",
@@ -30,4 +30,4 @@ class CreateNormalPqrsdUseCase:
             "attachments": attachments,
             "payload": payload,
         }
-        await self._repository.insert_request(record)
+        return await self._repository.insert_request(record)

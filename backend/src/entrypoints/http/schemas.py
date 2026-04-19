@@ -88,6 +88,35 @@ class AdminLoginResponse(BaseModel):
     adminName: str
 
 
+class AdminSendResponseIn(BaseModel):
+    official_response: str = Field(min_length=1)
+
+
+class AdminSendResponseOut(BaseModel):
+    success: bool
+    message: str
+    request_id: str
+
+
+class QuickSuggestionsIn(BaseModel):
+    query_text: str = Field(min_length=8)
+    department: str | None = None
+    limit: int = Field(default=5, ge=1, le=5)
+
+
+class QuickSuggestionItem(BaseModel):
+    id: str
+    caso_tipo: str
+    respuesta_validada: str
+    similitud: float
+    departamento_nombre: str
+
+
+class QuickSuggestionsOut(BaseModel):
+    success: bool
+    suggestions: list[QuickSuggestionItem] = Field(default_factory=list)
+
+
 class AgentFlowSummary(BaseModel):
     request_id: str
     tracking_id: str
@@ -135,6 +164,9 @@ class AdminPqrsDetail(BaseModel):
     citizen_name: str
     subject: str
     description: str
+    borrador_respuesta: str
+    requiere_humano: bool
+    razon_revision: str
     directed_to: str
     status: str
     created_at: str

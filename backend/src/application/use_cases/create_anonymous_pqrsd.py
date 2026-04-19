@@ -9,7 +9,7 @@ class CreateAnonymousPqrsdUseCase:
 
     async def execute(
         self, *, tracking_id: str, payload: dict, attachments: list[dict]
-    ) -> None:
+    ) -> dict:
         record = {
             "tracking_id": tracking_id,
             "request_type": "anonymous",
@@ -23,4 +23,4 @@ class CreateAnonymousPqrsdUseCase:
             "attachments": attachments,
             "payload": payload,
         }
-        await self._repository.insert_request(record)
+        return await self._repository.insert_request(record)

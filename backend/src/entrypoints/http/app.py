@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.application.use_cases.admin_login import AdminLoginUseCase
@@ -18,9 +18,14 @@ from src.entrypoints.http.schemas import (
     AdminLoginResponse,
     AdminPqrsDetail,
     AdminPqrsListItem,
+    AdminSendResponseIn,
+    AdminSendResponseOut,
     AnonymousPayloadIn,
     CreateResponse,
     NormalPayloadIn,
+    QuickSuggestionItem,
+    QuickSuggestionsIn,
+    QuickSuggestionsOut,
 )
 from src.infrastructure.config.settings import Settings
 from src.infrastructure.repositories.supabase_admin_repository import (
@@ -58,6 +63,27 @@ def build_app() -> FastAPI:
 
     app = FastAPI(title="PQRSD Backend", version="0.1.0")
 
+    async def _sync_vector_in_background(request_record: dict) -> None:
+        try:
+            await repository.upsert_vector_pqrs(request_record)
+        except PersistenceError:
+            # The request was already persisted; vector sync can be retried later.
+            return
+
+    async def _save_official_response_in_background(
+        request_record: dict,
+        official_response: str,
+    ) -> None:
+        try:
+            await repository.save_official_response(
+                request_record=request_record,
+                official_response=official_response,
+                approved_by="admin",
+            )
+        except PersistenceError:
+            # Do not affect admin UX; persistence can be retried by maintenance jobs.
+            return
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_allowed_origins,
@@ -84,6 +110,31 @@ def build_app() -> FastAPI:
                     "Instala las dependencias del flujo de agentes para habilitar esta funcionalidad."
                 ),
             ) from exc
+
+    @app.post("/api/pqrsd/quick-suggestions", response_model=QuickSuggestionsOut)
+    async def quick_suggestions(body: QuickSuggestionsIn) -> QuickSuggestionsOut:
+        try:
+            rows = await repository.search_quick_replies(
+                text=body.query_text,
+                department=body.department,
+                limit=body.limit,
+            )
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        suggestions = [
+            QuickSuggestionItem(
+                id=str(row.get("id") or ""),
+                caso_tipo=str(row.get("caso_tipo") or ""),
+                respuesta_validada=str(row.get("respuesta_validada") or ""),
+                similitud=float(row.get("similitud") or 0.0),
+                departamento_nombre=str(row.get("departamento_nombre") or ""),
+            )
+            for row in rows
+            if row.get("id")
+        ]
+
+        return QuickSuggestionsOut(success=True, suggestions=suggestions)
 
     @app.post("/api/admin/auth/login", response_model=AdminLoginResponse)
     async def admin_login_endpoint(payload: AdminLoginIn) -> AdminLoginResponse:
@@ -142,8 +193,14 @@ def build_app() -> FastAPI:
         return "En revision"
 
     def _build_admin_item(record: dict) -> AdminPqrsListItem:
-        payload = record.get("payload") if isinstance(record.get("payload"), dict) else {}
-        flow = payload.get("agent_flow") if isinstance(payload.get("agent_flow"), dict) else {}
+        payload = (
+            record.get("payload") if isinstance(record.get("payload"), dict) else {}
+        )
+        flow = (
+            payload.get("agent_flow")
+            if isinstance(payload.get("agent_flow"), dict)
+            else {}
+        )
 
         created_at = str(record.get("created_at") or "")
         status = str(flow.get("estado") or record.get("status") or "received")
@@ -155,7 +212,9 @@ def build_app() -> FastAPI:
             ticket=str(record.get("tracking_id") or ""),
             citizen_name=str(record.get("full_name") or "Anonimo"),
             subject=str(record.get("subject") or "Sin asunto"),
-            directed_to=str(flow.get("departamento") or "Secretaria de Desarrollo Economico"),
+            directed_to=str(
+                flow.get("departamento") or "Secretaria de Desarrollo Economico"
+            ),
             status=_status_label(status),
             created_at=created_at,
             business_days_elapsed=_business_days_elapsed(created_at),
@@ -163,8 +222,25 @@ def build_app() -> FastAPI:
             sentimiento_score=sentimiento_score,
         )
 
+    def _is_resolved_record(record: dict) -> bool:
+        payload = record.get("payload") if isinstance(record.get("payload"), dict) else {}
+        flow = payload.get("agent_flow") if isinstance(payload.get("agent_flow"), dict) else {}
+
+        raw_status = str(flow.get("estado") or record.get("status") or "").strip().lower()
+        resolved_statuses = {
+            "closed",
+            "respondida",
+            "resuelta",
+            "resolved",
+            "aprobado",
+            "aprobada",
+            "finalizada",
+        }
+        return raw_status in resolved_statuses
+
     @app.post("/api/pqrsd/normal", response_model=CreateResponse)
     async def create_normal_request(
+        background_tasks: BackgroundTasks,
         payload: str = Form(...),
         attachments: list[UploadFile] = File(default=[]),
     ) -> CreateResponse:
@@ -190,11 +266,12 @@ def build_app() -> FastAPI:
                 files=files,
             )
 
-            await create_normal.execute(
+            created_request = await create_normal.execute(
                 tracking_id=tracking_id,
                 payload=parsed_payload.model_dump(),
                 attachments=uploaded_attachments,
             )
+            background_tasks.add_task(_sync_vector_in_background, created_request)
         except (ValueError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         except SupabaseStorageError as exc:
@@ -211,6 +288,7 @@ def build_app() -> FastAPI:
 
     @app.post("/api/pqrsd/anonymous", response_model=CreateResponse)
     async def create_anonymous_request(
+        background_tasks: BackgroundTasks,
         payload: str = Form(...),
         attachments: list[UploadFile] = File(default=[]),
     ) -> CreateResponse:
@@ -236,11 +314,12 @@ def build_app() -> FastAPI:
                 files=files,
             )
 
-            await create_anonymous.execute(
+            created_request = await create_anonymous.execute(
                 tracking_id=tracking_id,
                 payload=parsed_payload.model_dump(),
                 attachments=uploaded_attachments,
             )
+            background_tasks.add_task(_sync_vector_in_background, created_request)
         except (ValueError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         except SupabaseStorageError as exc:
@@ -262,7 +341,8 @@ def build_app() -> FastAPI:
         except PersistenceError as exc:
             raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-        items = [_build_admin_item(row) for row in rows]
+        open_rows = [row for row in rows if not _is_resolved_record(row)]
+        items = [_build_admin_item(row) for row in open_rows]
         items.sort(
             key=lambda item: (
                 -item.business_days_elapsed,
@@ -366,6 +446,71 @@ def build_app() -> FastAPI:
             business_days_elapsed=item.business_days_elapsed,
             business_days_limit=item.business_days_limit,
             sentimiento_score=item.sentimiento_score,
+        )
+
+    @app.post(
+        "/api/admin/pqrs/{request_id}/send-response",
+        response_model=AdminSendResponseOut,
+    )
+    async def send_admin_pqrs_response(
+        background_tasks: BackgroundTasks,
+        request_id: str,
+        body: AdminSendResponseIn,
+    ) -> AdminSendResponseOut:
+        official_response = body.official_response.strip()
+        if not official_response:
+            raise HTTPException(status_code=400, detail="La respuesta oficial no puede estar vacia.")
+
+        try:
+            request_row = await repository.fetch_request_by_id(request_id)
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        if not request_row:
+            raise HTTPException(status_code=404, detail="PQRS no encontrada.")
+
+        payload = (
+            request_row.get("payload") if isinstance(request_row.get("payload"), dict) else {}
+        )
+        flow = payload.get("agent_flow") if isinstance(payload.get("agent_flow"), dict) else {}
+        updated_payload = {
+            **payload,
+            "agent_flow": {
+                **flow,
+                "estado": "closed",
+                "respuesta_oficial": official_response,
+                "respuesta_oficial_enviada_at": datetime.now(timezone.utc).isoformat(),
+                "requiere_humano": False,
+            },
+        }
+
+        try:
+            await repository.patch_request(
+                request_id=request_id,
+                updates={
+                    "status": "closed",
+                    "payload": updated_payload,
+                },
+            )
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        # Persist official response and vector enrichment asynchronously.
+        request_row_for_background = {
+            **request_row,
+            "payload": updated_payload,
+            "status": "closed",
+        }
+        background_tasks.add_task(
+            _save_official_response_in_background,
+            request_row_for_background,
+            official_response,
+        )
+
+        return AdminSendResponseOut(
+            success=True,
+            message="Respuesta oficial enviada. La sincronizacion vectorial continua en segundo plano.",
+            request_id=request_id,
         )
 
     @app.post("/api/admin/agent-flow/run-latest", response_model=AgentFlowRunResponse)
