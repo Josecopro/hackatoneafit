@@ -22,7 +22,7 @@
     "moduleDetection": "force",
     "paths": {
       "@/*": [
-        "./*"
+        "./src/*"
       ]
     },
     "noEmit": true,

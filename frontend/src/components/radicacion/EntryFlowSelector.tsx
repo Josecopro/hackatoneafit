@@ -5,7 +5,7 @@ import { Building2, Landmark, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { InputField, StepCard } from '@/src/components/forms/sharedFields';
+import { InputField, StepCard } from '@/components/forms/sharedFields';
 import styles from './EntryFlowSelector.module.scss';
 
 export default function EntryFlowSelector() {

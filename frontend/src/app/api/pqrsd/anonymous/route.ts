@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { anonymousSchema } from '@/src/schema';
-import { getSupabaseServerClient } from '@/src/lib/supabaseServer';
-import { buildTrackingId } from '@/src/lib/pqrsdTracking';
+import { anonymousSchema } from '@/schema';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
+import { buildTrackingId } from '@/lib/pqrsdTracking';
 import {
   assertValidAttachments,
   cleanupUploadedAttachments,
   normalizeIncomingFiles,
   uploadAttachments,
-} from '@/src/lib/pqrsdAttachments';
+} from '@/lib/pqrsdAttachments';
 
 export async function POST(request: Request) {
   let uploadedAttachments: Awaited<ReturnType<typeof uploadAttachments>> = [];

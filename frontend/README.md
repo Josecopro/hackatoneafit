@@ -11,12 +11,12 @@ Aplicación web de radicación PQRSD construida con Next.js (App Router), React,
 
 ## Estructura principal
 
-- `app/page.tsx`: punto de entrada del frontend.
+- `src/app/page.tsx`: punto de entrada del frontend.
 - `src/components/radicacion/EntryFlowSelector.tsx`: selector inicial de flujos.
 - `src/App.tsx`: formularios normal/anónimo y pasos de radicación.
 - `src/schema.ts`: validaciones Zod del cliente y servidor.
-- `app/api/pqrsd/normal/route.ts`: endpoint para radicación normal.
-- `app/api/pqrsd/anonymous/route.ts`: endpoint para radicación anónima.
+- `src/app/api/pqrsd/normal/route.ts`: endpoint para radicación normal.
+- `src/app/api/pqrsd/anonymous/route.ts`: endpoint para radicación anónima.
 - `supabase/pqrsd_schema.sql`: script SQL para crear tabla e índices de almacenamiento.
 - `src/lib/supabaseServer.ts`: cliente de Supabase para rutas del servidor.
 
@@ -50,7 +50,7 @@ npm run lint
 
 ## Nota rápida de mantenimiento
 
-Si `npm run lint` reporta errores en `.next/types/validator.ts`, revisa que cada ruta en `app/**/page.tsx` exporte un `default` válido y que `src/schema.ts` sea compatible con la versión actual de Zod.
+Si `npm run lint` reporta errores en `.next/types/validator.ts`, revisa que cada ruta en `src/app/**/page.tsx` exporte un `default` válido y que `src/schema.ts` sea compatible con la versión actual de Zod.
 
 ## Supabase (persistencia de PQRSD)
 
@@ -64,8 +64,8 @@ SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
 3. La persistencia ocurre en:
-	- `app/api/pqrsd/normal/route.ts`
-	- `app/api/pqrsd/anonymous/route.ts`
+	- `src/app/api/pqrsd/normal/route.ts`
+	- `src/app/api/pqrsd/anonymous/route.ts`
 
 Cada radicación guarda:
 - datos clave de búsqueda (tipo, asunto, estado, fechas)

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle, CloudUpload } from 'lucide-react';
 
-import type { Option } from '@/src/constants/formOptions';
+import type { Option } from '@/constants/formOptions';
 import styles from './sharedFields.module.scss';
 
 export const StepCard = ({ title, subtitle, children, stepNumber }: any) => (
