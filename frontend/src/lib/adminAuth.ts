@@ -136,3 +136,26 @@ export async function verifyAdminSessionToken(token: string): Promise<SessionPay
     return null;
   }
 }
+
+export function hasValidAdminSessionTokenShape(token: string): boolean {
+  if (!token) {
+    return false;
+  }
+
+  const parts = token.split('.');
+  if (parts.length !== 2) {
+    return false;
+  }
+
+  try {
+    const payloadRaw = base64UrlDecode(parts[0]);
+    const payload = JSON.parse(payloadRaw) as Partial<SessionPayload>;
+    const nowSeconds = Math.floor(Date.now() / 1000);
+
+    return payload.sub === 'admin'
+      && typeof payload.exp === 'number'
+      && payload.exp > nowSeconds;
+  } catch {
+    return false;
+  }
+}
