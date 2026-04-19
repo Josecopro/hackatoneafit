@@ -18,7 +18,7 @@ Aplicación web de radicación PQRSD construida con Next.js (App Router), React,
 - `src/app/api/pqrsd/normal/route.ts`: endpoint para radicación normal.
 - `src/app/api/pqrsd/anonymous/route.ts`: endpoint para radicación anónima.
 - `supabase/pqrsd_schema.sql`: script SQL para crear tabla e índices de almacenamiento.
-- `src/lib/supabaseServer.ts`: cliente de Supabase para rutas del servidor.
+- `src/lib/backendPqrsdClient.ts`: cliente BFF para delegar solicitudes al backend.
 
 ## Comandos
 
@@ -58,14 +58,16 @@ Si `npm run lint` reporta errores en `.next/types/validator.ts`, revisa que cada
 2. Configura variables de entorno:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...
+BACKEND_BASE_URL=http://localhost:8000
 ```
+
+`BACKEND_BASE_URL` es obligatorio para radicar solicitudes. Las rutas de Next delegan toda la lógica de persistencia y anexos al backend desacoplado.
 
 3. La persistencia ocurre en:
    - `src/app/api/pqrsd/normal/route.ts`
    - `src/app/api/pqrsd/anonymous/route.ts`
+
+Estas rutas actúan como BFF y delegan persistencia exclusivamente al backend.
 
 Cada radicación guarda:
 
