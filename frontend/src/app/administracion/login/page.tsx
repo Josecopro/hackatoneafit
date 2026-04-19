@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import LoginView from '@/modules/admin-pqrs/LoginView';
 
 export const metadata: Metadata = {
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLoginPage() {
-  return <LoginView />;
+  return (
+    <Suspense fallback={null}>
+      <LoginView />
+    </Suspense>
+  );
 }
