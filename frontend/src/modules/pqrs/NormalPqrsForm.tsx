@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AlertTriangle, ExternalLink, Loader2, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -21,6 +22,7 @@ import styles from '@/App.module.scss';
 const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
 
 export default function NormalPqrsForm() {
+  const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [trackingId, setTrackingId] = useState('');
   const [serverError, setServerError] = useState('');
@@ -145,12 +147,7 @@ export default function NormalPqrsForm() {
       <SuccessView
         trackingId={trackingId}
         viewType="normal"
-        resetForm={() => {
-          reset();
-          setAttachments([]);
-          setAttachmentError('');
-          setStatus('idle');
-        }}
+        onFinish={() => router.push('/')}
       />
     );
   }

@@ -53,6 +53,13 @@ class AnonymousPayloadIn(BaseModel):
     accept_terms: bool
     attachments_count: int = Field(default=0, ge=0, le=5)
 
+    @field_validator("email", "phone", mode="before")
+    @classmethod
+    def empty_optional_fields_to_none(cls, value: str | None):
+        if isinstance(value, str) and not value.strip():
+            return None
+        return value
+
 
 class CreateNormalRequest(BaseModel):
     payload: NormalPayloadIn

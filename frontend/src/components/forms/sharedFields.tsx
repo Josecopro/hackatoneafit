@@ -171,7 +171,7 @@ export const AttachmentPicker = ({ files, setFiles, fileError, setFileError, inp
   );
 };
 
-export const SuccessView = ({ trackingId, viewType, resetForm }: any) => (
+export const SuccessView = ({ trackingId, viewType, onFinish }: any) => (
   <div className={`${styles.successCard} animate-fade-in`}>
     <div className={styles.successIconWrap}>
       <CheckCircle size={40} />
@@ -189,10 +189,10 @@ export const SuccessView = ({ trackingId, viewType, resetForm }: any) => (
     </div>
 
     <button
-      onClick={resetForm}
+      onClick={onFinish}
       className={styles.secondaryButton}
     >
-      Radicar otra solicitud
+      Volver al inicio
     </button>
   </div>
 );

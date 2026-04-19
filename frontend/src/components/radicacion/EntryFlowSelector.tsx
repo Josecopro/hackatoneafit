@@ -3,12 +3,13 @@
 import { useRouter } from 'next/navigation';
 import { Building2, Landmark, Lock } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { InputField, StepCard } from '@/components/forms/sharedFields';
 import styles from './EntryFlowSelector.module.scss';
 
 const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
+const ENTRY_SUGGESTION_POPUP_DISMISSED_KEY = 'entry_suggestion_popup_dismissed';
 
 type NormalEntryPrefill = {
   doc_type: string;
@@ -21,6 +22,24 @@ type NormalEntryPrefill = {
 export default function EntryFlowSelector() {
   const router = useRouter();
   const [showNormalReqForm, setShowNormalReqForm] = useState(false);
+  const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+
+  useEffect(() => {
+    try {
+      const alreadyDismissed = sessionStorage.getItem(ENTRY_SUGGESTION_POPUP_DISMISSED_KEY) === '1';
+      if (alreadyDismissed) return;
+    } catch {
+      // Ignore storage read errors and fallback to showing popup.
+    }
+
+    const timer = window.setTimeout(() => {
+      setShowSuggestionPopup(true);
+    }, 2400);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   const goToAnonymousFlow = () => {
     router.push('/radicacion/anonima');
@@ -42,8 +61,50 @@ export default function EntryFlowSelector() {
     setShowNormalReqForm(true);
   };
 
+  const closeSuggestionPopup = () => {
+    setShowSuggestionPopup(false);
+    try {
+      sessionStorage.setItem(ENTRY_SUGGESTION_POPUP_DISMISSED_KEY, '1');
+    } catch {
+      // Ignore storage write errors.
+    }
+  };
+
   return (
     <main className={`${styles.page}`}>
+      {showSuggestionPopup && (
+        <div className={styles.popupOverlay} role="dialog" aria-modal="true" aria-label="Sugerencia de búsqueda rápida">
+          <div className={styles.popupCard}>
+            <button
+              type="button"
+              aria-label="Cerrar sugerencia"
+              className={styles.popupDismissBtn}
+              onClick={closeSuggestionPopup}
+            >
+              X
+            </button>
+            <h3 className={styles.popupTitle}>Puede que tu pregunta ya la hayan respondido</h3>
+            <p className={styles.popupText}>
+              Escribe una breve descripción de tu duda o consulta y te mostraremos información relevante que ya esté disponible en nuestro portal.
+            </p>
+            <input
+              type="text"
+              className={styles.popupInput}
+              placeholder="Ejemplo: ¿Cómo puedo cambiar mi dirección de residencia?"
+            />
+            <div className={styles.popupActions}>
+              <button
+                type="button"
+                className={styles.popupCloseBtn}
+                onClick={closeSuggestionPopup}
+              >
+                Consultar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={styles.container}>
         <header className={styles.header}>
           <h1 className={`${styles.title} font-display`}>PQRSD Alcaldía de Medellín</h1>

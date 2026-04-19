@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AlertTriangle, ExternalLink, Loader2, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -18,6 +19,7 @@ import {
 import styles from '@/App.module.scss';
 
 export default function AnonymousPqrsForm() {
+  const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [trackingId, setTrackingId] = useState('');
   const [serverError, setServerError] = useState('');
@@ -82,12 +84,7 @@ export default function AnonymousPqrsForm() {
       <SuccessView
         trackingId={trackingId}
         viewType="anon"
-        resetForm={() => {
-          reset();
-          setAttachments([]);
-          setAttachmentError('');
-          setStatus('idle');
-        }}
+        onFinish={() => router.push('/')}
       />
     );
   }

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from '@/App.module.scss';
 
 type HeroSectionProps = {
@@ -13,6 +14,12 @@ export default function HeroSection({ heroTitle, heroDescription }: HeroSectionP
       </div>
 
       <div className={styles.heroInner}>
+        <div className={styles.heroTopBar}>
+          <Link href="/" className={styles.heroBackButton}>
+            Volver al inicio
+          </Link>
+        </div>
+
         <div className={styles.heroGrid}>
           <div>
             <h2 className={styles.heroTitle}>{heroTitle}</h2>

@@ -329,6 +329,28 @@
   z-index: 1;
 }
 
+.heroTopBar {
+  margin-bottom: 1.25rem;
+}
+
+.heroBackButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(var(--rgb-white), 0.92);
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(var(--rgb-white), 0.28);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  background: rgba(var(--rgb-white), 0.08);
+}
+
+.heroBackButton:hover {
+  background: rgba(var(--rgb-white), 0.16);
+  color: var(--color-white);
+}
+
 
 
 .heroGrid {
