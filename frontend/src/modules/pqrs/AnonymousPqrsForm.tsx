@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AlertTriangle, ExternalLink, Loader2, Send } from 'lucide-react';
@@ -19,6 +19,8 @@ import {
 import { getBackendUrl } from '@/lib/backendUrl';
 import styles from '@/App.module.scss';
 
+const ENTRY_QUERY_PREFILL_STORAGE_KEY = 'pqrs_entry_query_prefill';
+
 export default function AnonymousPqrsForm() {
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -30,7 +32,7 @@ export default function AnonymousPqrsForm() {
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(anonymousSchema),
@@ -45,7 +47,37 @@ export default function AnonymousPqrsForm() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  useEffect(() => {
+    try {
+      const rawQueryPrefill = sessionStorage.getItem(ENTRY_QUERY_PREFILL_STORAGE_KEY);
+      if (!rawQueryPrefill) return;
+
+      const parsed = JSON.parse(rawQueryPrefill) as {
+        description?: string;
+      };
+
+      if (parsed.description) {
+        setValue('description', parsed.description);
+      }
+
+      sessionStorage.removeItem(ENTRY_QUERY_PREFILL_STORAGE_KEY);
+    } catch {
+      sessionStorage.removeItem(ENTRY_QUERY_PREFILL_STORAGE_KEY);
+    }
+  }, [setValue]);
+
+  const fetchWithTimeout = async (input: RequestInfo | URL, init: RequestInit, timeoutMs: number) => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      return await fetch(input, { ...init, signal: controller.signal });
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+  };
+
+  const submitRequest = async (data: any) => {
     setStatus('submitting');
     setServerError('');
 
@@ -62,10 +94,14 @@ export default function AnonymousPqrsForm() {
       });
 
       const backendUrl = getBackendUrl();
-      const res = await fetch(`${backendUrl}/api/pqrsd/anonymous`, {
-        method: 'POST',
-        body: formData,
-      });
+      const res = await fetchWithTimeout(
+        `${backendUrl}/api/pqrsd/anonymous`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+        30000,
+      );
       const result = await res.json();
 
       if (result.success) {
@@ -79,6 +115,11 @@ export default function AnonymousPqrsForm() {
       setStatus('idle');
       setServerError('Error de conexión con el servidor. Por favor, intente de nuevo.');
     }
+  };
+
+  const onSubmit = async (data: any) => {
+    setServerError('');
+    await submitRequest(data);
   };
 
   if (status === 'success') {

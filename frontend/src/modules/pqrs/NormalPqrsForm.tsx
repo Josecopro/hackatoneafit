@@ -21,6 +21,7 @@ import { getBackendUrl } from '@/lib/backendUrl';
 import styles from '@/App.module.scss';
 
 const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
+const ENTRY_QUERY_PREFILL_STORAGE_KEY = 'pqrs_entry_query_prefill';
 
 export default function NormalPqrsForm() {
   const router = useRouter();
@@ -104,7 +105,37 @@ export default function NormalPqrsForm() {
     }
   }, [setValue]);
 
-  const onSubmit = async (data: any) => {
+  useEffect(() => {
+    try {
+      const rawQueryPrefill = sessionStorage.getItem(ENTRY_QUERY_PREFILL_STORAGE_KEY);
+      if (!rawQueryPrefill) return;
+
+      const parsed = JSON.parse(rawQueryPrefill) as {
+        description?: string;
+      };
+
+      if (parsed.description) {
+        setValue('description', parsed.description);
+      }
+
+      sessionStorage.removeItem(ENTRY_QUERY_PREFILL_STORAGE_KEY);
+    } catch {
+      sessionStorage.removeItem(ENTRY_QUERY_PREFILL_STORAGE_KEY);
+    }
+  }, [setValue]);
+
+  const fetchWithTimeout = async (input: RequestInfo | URL, init: RequestInit, timeoutMs: number) => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      return await fetch(input, { ...init, signal: controller.signal });
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+  };
+
+  const submitRequest = async (data: any) => {
     setStatus('submitting');
     setServerError('');
 
@@ -121,10 +152,14 @@ export default function NormalPqrsForm() {
       });
 
       const backendUrl = getBackendUrl();
-      const res = await fetch(`${backendUrl}/api/pqrsd/normal`, {
-        method: 'POST',
-        body: formData,
-      });
+      const res = await fetchWithTimeout(
+        `${backendUrl}/api/pqrsd/normal`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+        30000,
+      );
       const result = await res.json();
 
       if (result.success) {
@@ -138,6 +173,11 @@ export default function NormalPqrsForm() {
       setStatus('idle');
       setServerError('Error de conexión con el servidor. Por favor, intente de nuevo.');
     }
+  };
+
+  const onSubmit = async (data: any) => {
+    setServerError('');
+    await submitRequest(data);
   };
 
   const onInvalidSubmit = () => {

@@ -21,6 +21,10 @@ type AdminPqrsDetail = AdminPqrsListItem & {
   razon_revision: string;
 };
 
+type SendOfficialResponsePayload = {
+  official_response: string;
+};
+
 function mapStatus(status: string): PqrsRecord['status'] {
   if (status === 'Radicada') return 'Radicada';
   if (status === 'Respondida') return 'Respondida';
@@ -92,6 +96,34 @@ export async function getPqrsById(id: string): Promise<PqrsRecord | null> {
     requiresHumanReview: Boolean(item.requiere_humano),
     reviewReason: item.razon_revision || 'Borrador generado por IA; requiere validacion humana antes de envio.',
   };
+}
+
+export async function sendOfficialResponse(id: string, officialResponse: string): Promise<void> {
+  const backendUrl = getBackendUrl();
+  const payload: SendOfficialResponsePayload = {
+    official_response: officialResponse,
+  };
+
+  const response = await fetch(`${backendUrl}/api/admin/pqrs/${id}/send-response`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let detail = 'No fue posible enviar la respuesta oficial.';
+    try {
+      const body = await response.json();
+      if (typeof body?.detail === 'string' && body.detail.trim()) {
+        detail = body.detail;
+      }
+    } catch {
+      // Keep default message when response body is not JSON.
+    }
+    throw new Error(detail);
+  }
 }
 
 export function formatDate(dateISO: string): string {

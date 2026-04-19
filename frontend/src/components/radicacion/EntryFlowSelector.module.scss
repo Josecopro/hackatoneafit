@@ -74,6 +74,7 @@
   margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .popupCloseBtn {
@@ -88,6 +89,54 @@
 
 .popupCloseBtn:hover {
   background: var(--color-brand-800);
+}
+
+.popupContinueBtn {
+  border: 0;
+  border-radius: 0.75rem;
+  padding: 0.72rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--color-brand-900);
+  color: var(--color-white);
+}
+
+.popupContinueBtn:hover {
+  background: var(--color-brand-800);
+}
+
+.popupError {
+  margin-top: 0.5rem;
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.popupSuggestionList {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.6rem;
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.popupSuggestionItem {
+  border: 1px solid var(--color-border);
+  border-radius: 0.7rem;
+  padding: 0.7rem;
+  background: var(--color-surface-soft);
+}
+
+.popupSuggestionCase {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-brand-800);
+  margin: 0 0 0.3rem;
+}
+
+.popupSuggestionText {
+  font-size: 0.9rem;
+  color: var(--color-text-strong);
+  margin: 0;
 }
 
 .container {
@@ -177,6 +226,7 @@
   font-weight: 700;
   color: var(--color-text-strong);
 }
+
 .cardCta {
   display: inline-flex;
   align-items: center;

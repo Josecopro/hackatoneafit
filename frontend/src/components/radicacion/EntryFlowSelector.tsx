@@ -1,15 +1,25 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { Building2, Landmark, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import { InputField, StepCard } from '@/components/forms/sharedFields';
+import { getBackendUrl } from '@/lib/backendUrl';
 import styles from './EntryFlowSelector.module.scss';
 
 const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
-const ENTRY_SUGGESTION_POPUP_DISMISSED_KEY = 'entry_suggestion_popup_dismissed';
+const ENTRY_QUERY_PREFILL_STORAGE_KEY = 'pqrs_entry_query_prefill';
+
+type FlowTarget = 'normal' | 'anonymous';
+
+type QuickSuggestion = {
+  id: string;
+  caso_tipo: string;
+  respuesta_validada: string;
+  similitud: number;
+  departamento_nombre: string;
+};
 
 type NormalEntryPrefill = {
   doc_type: string;
@@ -19,22 +29,26 @@ type NormalEntryPrefill = {
   accept_policy: boolean;
 };
 
-type FlowSelection = 'normal' | 'anonymous' | null;
-
 export default function EntryFlowSelector() {
   const router = useRouter();
   const [showNormalReqForm, setShowNormalReqForm] = useState(false);
   const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+  const [pendingFlowTarget, setPendingFlowTarget] = useState<FlowTarget>('normal');
+  const [queryText, setQueryText] = useState('');
+  const [suggestions, setSuggestions] = useState<QuickSuggestion[]>([]);
+  const [isSearchingSuggestions, setIsSearchingSuggestions] = useState(false);
+  const [showDecisionActions, setShowDecisionActions] = useState(false);
   const [entryError, setEntryError] = useState('');
-
-  const [selectedFlow, setSelectedFlow] = useState<FlowSelection>(null);
-
   const goToAnonymousFlow = () => {
     router.push('/radicacion/anonima');
   };
 
   const goToNormalFlow = () => {
     router.push('/radicacion/normal');
+  };
+
+  const openNormalReqForm = () => {
+    setShowNormalReqForm(true);
   };
 
   const saveNormalPrefill = (payload: NormalEntryPrefill) => {
@@ -45,29 +59,90 @@ export default function EntryFlowSelector() {
     }
   };
 
-  const openFlowWithPopup = (flow: Exclude<FlowSelection, null>) => {
-    setSelectedFlow(flow);
+  const openSuggestionPopup = (flowTarget: FlowTarget) => {
+    setPendingFlowTarget(flowTarget);
     setShowSuggestionPopup(true);
+    setShowDecisionActions(false);
+    setSuggestions([]);
+    setQueryText('');
+  };
+
+  const saveQueryPrefill = (rawQuery: string) => {
+    const normalized = rawQuery.trim();
+    if (!normalized) return;
+
+    const payload = {
+      description: normalized,
+    };
+
+    try {
+      sessionStorage.setItem(ENTRY_QUERY_PREFILL_STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Ignore storage write errors and continue to keep navigation functional.
+    }
+  };
+
+  const continueToSelectedFlow = () => {
+    saveQueryPrefill(queryText);
+    setShowSuggestionPopup(false);
+    setSuggestions([]);
+    setShowDecisionActions(false);
+
+    if (pendingFlowTarget === 'anonymous') {
+      goToAnonymousFlow();
+      return;
+    }
+
+    openNormalReqForm();
+  };
+
+  const searchQuickSuggestions = async () => {
+    const text = queryText.trim();
+    if (!text) {
+      continueToSelectedFlow();
+      return;
+    }
+
+    setIsSearchingSuggestions(true);
+    setShowDecisionActions(false);
+
+    try {
+      const backendUrl = getBackendUrl();
+      const response = await fetch(`${backendUrl}/api/pqrsd/quick-suggestions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query_text: text,
+          limit: 5,
+        }),
+      });
+
+      if (!response.ok) {
+        continueToSelectedFlow();
+        return;
+      }
+
+      const json = await response.json();
+      const rows = Array.isArray(json?.suggestions) ? (json.suggestions as QuickSuggestion[]) : [];
+      setSuggestions(rows);
+      if (rows.length > 0) {
+        setShowDecisionActions(true);
+      } else {
+        continueToSelectedFlow();
+      }
+    } catch {
+      continueToSelectedFlow();
+    } finally {
+      setIsSearchingSuggestions(false);
+    }
   };
 
   const closeSuggestionPopup = () => {
     setShowSuggestionPopup(false);
-
-    if (selectedFlow === 'normal') {
-      setShowNormalReqForm(true);
-    }
-
-    if (selectedFlow === 'anonymous') {
-      goToAnonymousFlow();
-    }
-
-    setSelectedFlow(null);
-
-    try {
-      sessionStorage.setItem(ENTRY_SUGGESTION_POPUP_DISMISSED_KEY, '1');
-    } catch {
-      // Ignore storage write errors.
-    }
+    setSuggestions([]);
+    setShowDecisionActions(false);
   };
 
   return (
@@ -91,15 +166,41 @@ export default function EntryFlowSelector() {
               type="text"
               className={styles.popupInput}
               placeholder="Ejemplo: ¿Cómo puedo cambiar mi dirección de residencia?"
+              value={queryText}
+              onChange={(event) => setQueryText(event.target.value)}
             />
+
+            {suggestions.length > 0 && (
+              <div className={styles.popupSuggestionList}>
+                {suggestions.map((item) => (
+                  <article key={item.id} className={styles.popupSuggestionItem}>
+                    <p className={styles.popupSuggestionCase}>{item.caso_tipo || 'Caso relacionado'}</p>
+                    <p className={styles.popupSuggestionText}>{item.respuesta_validada}</p>
+                  </article>
+                ))}
+              </div>
+            )}
+
             <div className={styles.popupActions}>
-              <button
-                type="button"
-                className={styles.popupCloseBtn}
-                onClick={closeSuggestionPopup}
-              >
-                Consultar
-              </button>
+              {showDecisionActions ? (
+                <>
+                  <button type="button" className={styles.popupCloseBtn} onClick={closeSuggestionPopup}>
+                    Ya resolvi mi duda
+                  </button>
+                  <button type="button" className={styles.popupContinueBtn} onClick={continueToSelectedFlow}>
+                    Seguir con la PQRS
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.popupContinueBtn}
+                  onClick={searchQuickSuggestions}
+                  disabled={isSearchingSuggestions}
+                >
+                  {isSearchingSuggestions ? 'Consultando...' : 'Continuar'}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -127,11 +228,11 @@ export default function EntryFlowSelector() {
         <section className={styles.cards}>
           <button
             type="button"
-            onClick={() => openFlowWithPopup('normal')}
+            onClick={() => openSuggestionPopup('normal')}
             className={styles.card}
           >
             <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS</h2>
- 
+
             <span className={`${styles.cardCta} ${styles.cardCtaNormal}`}>
               Radicacion de PQRS
             </span>
@@ -139,7 +240,7 @@ export default function EntryFlowSelector() {
 
           <button
             type="button"
-            onClick={() => openFlowWithPopup('anonymous')}
+            onClick={() => openSuggestionPopup('anonymous')}
             className={styles.card}
           >
             <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS anonimas</h2>
@@ -245,7 +346,7 @@ export default function EntryFlowSelector() {
                         rel="noopener noreferrer"
                         className={styles.policyLink}
                       >
-                      política de tratamiento de datos
+                        política de tratamiento de datos
                       </Link>
                     </span>
                   </label>

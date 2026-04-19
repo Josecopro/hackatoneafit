@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './AdminViews.module.scss';
-import { formatDate } from './utils';
+import { formatDate, sendOfficialResponse } from './utils';
 import type { PqrsRecord } from './types';
 
 type PqrsReplyViewProps = {
@@ -32,6 +32,8 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
 
   const [officialReply, setOfficialReply] = useState(initialOfficialReply);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSubmitted) {
@@ -115,9 +117,25 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
             </p>
 
             <form
-              onSubmit={(event) => {
+              onSubmit={async (event) => {
                 event.preventDefault();
-                setIsSubmitted(true);
+                const trimmedReply = officialReply.trim();
+                if (!trimmedReply) {
+                  setSubmitError('La respuesta oficial no puede estar vacia.');
+                  return;
+                }
+
+                setSubmitError(null);
+                setIsSubmitting(true);
+
+                try {
+                  await sendOfficialResponse(record.id, trimmedReply);
+                  setIsSubmitted(true);
+                } catch (error) {
+                  setSubmitError(error instanceof Error ? error.message : 'No fue posible enviar la respuesta. Intenta nuevamente.');
+                } finally {
+                  setIsSubmitting(false);
+                }
               }}
             >
               <label className={styles.label} htmlFor="response-message">
@@ -131,9 +149,11 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
                 onChange={(event) => setOfficialReply(event.target.value)}
               />
 
+              {submitError ? <p className={styles.helperText}>{submitError}</p> : null}
+
               <div className={styles.actions}>
-                <button className={styles.primaryButton} type="submit">
-                  Enviar respuesta
+                <button className={styles.primaryButton} type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Enviando...' : 'Enviar respuesta'}
                 </button>
               </div>
             </form>

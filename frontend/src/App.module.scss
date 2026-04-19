@@ -242,6 +242,75 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+.suggestionBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(10, 18, 28, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.suggestionCard {
+  width: min(760px, 100%);
+  max-height: 85vh;
+  overflow: auto;
+  background: var(--color-white);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+}
+
+.suggestionTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+}
+
+.suggestionSubtitle {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--color-text-soft);
+}
+
+.suggestionList {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.suggestionItem {
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  background: var(--color-surface-soft);
+}
+
+.suggestionCase {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-brand-800);
+  margin-bottom: 0.4rem;
+}
+
+.suggestionText {
+  font-size: 0.9rem;
+  color: var(--color-text-strong);
+  line-height: 1.4;
+}
+
+.suggestionActions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -491,9 +560,10 @@
 
 
 @media (min-width: 640px) {
+
   .headerInner,
   .heroInner,
-  .main{
+  .main {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
@@ -516,6 +586,7 @@
 }
 
 @media (min-width: 1024px) {
+
   .headerInner,
   .heroInner,
   .main {
@@ -525,6 +596,7 @@
 }
 
 @media (max-width: 639px) {
+
   .myRecords,
   .divider {
     display: none;
@@ -542,6 +614,7 @@
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
