@@ -28,7 +28,7 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
       <div className={styles.container}>
         <div className={styles.topBar}>
           <span className={styles.brand}>Administracion PQRSD</span>
-          <Link className={styles.topLink} href="/administracion/login">
+          <Link className={styles.topLink} href="/api/admin/auth/logout">
             Cerrar sesion
           </Link>
         </div>

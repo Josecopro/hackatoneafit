@@ -6,22 +6,34 @@ from datetime import datetime, timedelta, timezone
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+<<<<<<< HEAD
 from src.application.agent_flow import run_minimal_agent_flow
 from src.application.agent_flow.knowledge_base import ALLOWED_GOV_SOURCES
+=======
+from src.application.use_cases.admin_login import AdminLoginUseCase
+>>>>>>> 2ca1bd6 (added auth with supabase!)
 from src.application.use_cases.create_anonymous_pqrsd import CreateAnonymousPqrsdUseCase
 from src.application.use_cases.create_normal_pqrsd import CreateNormalPqrsdUseCase
-from src.domain.services.errors import PersistenceError
+from src.domain.services.errors import AuthenticationError, PersistenceError
 from src.domain.services.tracking import build_tracking_id
 from src.entrypoints.http.schemas import (
+<<<<<<< HEAD
     AgentFlowRunResponse,
     AgentFlowSummary,
     AdminPqrsDetail,
     AdminPqrsListItem,
+=======
+    AdminLoginIn,
+    AdminLoginResponse,
+>>>>>>> 2ca1bd6 (added auth with supabase!)
     AnonymousPayloadIn,
     CreateResponse,
     NormalPayloadIn,
 )
 from src.infrastructure.config.settings import Settings
+from src.infrastructure.repositories.supabase_admin_repository import (
+    SupabaseAdminRepository,
+)
 from src.infrastructure.repositories.supabase_pqrsd_repository import (
     SupabasePqrsdRepository,
 )
@@ -39,6 +51,10 @@ def build_app() -> FastAPI:
         supabase_url=settings.supabase_url,
         service_role_key=settings.supabase_service_role_key,
     )
+    admin_repository = SupabaseAdminRepository(
+        supabase_url=settings.supabase_url,
+        service_role_key=settings.supabase_service_role_key,
+    )
     storage = SupabaseStorageClient(
         supabase_url=settings.supabase_url,
         service_role_key=settings.supabase_service_role_key,
@@ -46,6 +62,7 @@ def build_app() -> FastAPI:
     )
     create_normal = CreateNormalPqrsdUseCase(repository)
     create_anonymous = CreateAnonymousPqrsdUseCase(repository)
+    admin_login = AdminLoginUseCase(admin_repository)
 
     app = FastAPI(title="PQRSD Backend", version="0.1.0")
 
@@ -61,6 +78,7 @@ def build_app() -> FastAPI:
     async def health() -> dict:
         return {"ok": True}
 
+<<<<<<< HEAD
     def _parse_datetime(raw_value: str) -> datetime:
         candidate = (raw_value or "").strip()
         if candidate.endswith("Z"):
@@ -119,6 +137,24 @@ def build_app() -> FastAPI:
             business_days_elapsed=_business_days_elapsed(created_at),
             business_days_limit=business_days_limit,
             sentimiento_score=sentimiento_score,
+=======
+    @app.post("/api/admin/auth/login", response_model=AdminLoginResponse)
+    async def admin_login_endpoint(payload: AdminLoginIn) -> AdminLoginResponse:
+        try:
+            admin = await admin_login.execute(
+                email=payload.email,
+                password=payload.password,
+            )
+        except AuthenticationError as exc:
+            raise HTTPException(status_code=401, detail=str(exc)) from exc
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        return AdminLoginResponse(
+            success=True,
+            adminEmail=admin["email"],
+            adminName=admin["full_name"],
+>>>>>>> 2ca1bd6 (added auth with supabase!)
         )
 
     @app.post("/api/pqrsd/normal", response_model=CreateResponse)

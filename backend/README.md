@@ -42,6 +42,7 @@ cp .env.example .env.local
 - `GET /health`
 - `POST /api/pqrsd/normal`
 - `POST /api/pqrsd/anonymous`
+<<<<<<< HEAD
 
 ## Migraciones SQL
 
@@ -50,3 +51,32 @@ El repositorio incluye una migracion idempotente para el modelo actual de `pqrsd
 - `backend/migrations/20260419_pqrsd_requests_admin_models.sql`
 
 Como en este proyecto no hay Supabase CLI configurado, puedes ejecutarla desde el SQL Editor de Supabase.
+=======
+- `POST /api/admin/auth/login`
+
+## Auth de administradores (Etapa 2)
+
+1. Ejecuta el script SQL en Supabase:
+
+- `backend/supabase/admin_auth_schema.sql`
+
+2. Instala dependencias actualizadas (incluye `bcrypt`):
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Genera un hash bcrypt para el password del administrador e insertalo en `admin_users`:
+
+```python
+import bcrypt
+print(bcrypt.hashpw(b"tu-password-seguro", bcrypt.gensalt()).decode())
+```
+
+4. Inserta el administrador (email en minuscula):
+
+```sql
+insert into public.admin_users (email, full_name, password_hash)
+values ('admin@medellin.gov.co', 'Administrador PQRSD', '$2b$12$...');
+```
+>>>>>>> 2ca1bd6 (added auth with supabase!)

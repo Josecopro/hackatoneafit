@@ -66,3 +66,22 @@ Cada radicación guarda:
 - metadatos de contacto y ubicación
 - `tracking_id` único
 - `payload` JSONB con todos los campos validados del formulario
+
+## Autenticacion de administradores
+
+Configura tambien estas variables en `frontend/.env.local` (o en la raiz si ejecutas con `run-dev.sh`):
+
+```bash
+BACKEND_BASE_URL=http://localhost:8000
+ADMIN_AUTH_SECRET=change-this-secret-with-at-least-32-chars
+```
+
+Flujo implementado:
+
+- `POST /api/admin/auth/login`: delega validacion de credenciales al backend y crea cookie de sesion `httpOnly` firmada.
+- `GET /api/admin/auth/logout`: elimina sesion y redirige al login administrativo.
+- `src/middleware.ts`: protege todas las rutas bajo `/administracion/*` excepto `/administracion/login`.
+
+Desde la etapa 2, los administradores viven en la tabla `admin_users` de Supabase y el frontend ya no lee correo/contrasena de variables de entorno.
+
+Cuando un usuario intenta abrir una ruta protegida sin sesion activa, se redirige a login con parametro `next` para regresar al destino luego de autenticarse.

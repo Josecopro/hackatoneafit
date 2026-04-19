@@ -77,6 +77,7 @@ class CreateResponse(BaseModel):
     trackingId: str
 
 
+<<<<<<< HEAD
 class AgentFlowSummary(BaseModel):
     request_id: str
     tracking_id: str
@@ -130,3 +131,14 @@ class AdminPqrsDetail(BaseModel):
     business_days_elapsed: int
     business_days_limit: int
     sentimiento_score: float
+=======
+class AdminLoginIn(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=1, max_length=256)
+
+
+class AdminLoginResponse(BaseModel):
+    success: bool
+    adminEmail: EmailStr
+    adminName: str
+>>>>>>> 2ca1bd6 (added auth with supabase!)
