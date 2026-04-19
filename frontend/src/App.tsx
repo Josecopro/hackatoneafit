@@ -99,10 +99,15 @@ const NormalPQRSD = () => {
         attachments_count: attachments.length,
       };
 
+      const formData = new FormData();
+      formData.append('payload', JSON.stringify(payload));
+      attachments.forEach((file) => {
+        formData.append('attachments', file);
+      });
+
       const res = await fetch('/api/pqrsd/normal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
       const result = await res.json();
 
@@ -345,10 +350,15 @@ const AnonymousPQRSD = () => {
         attachments_count: attachments.length,
       };
 
+      const formData = new FormData();
+      formData.append('payload', JSON.stringify(payload));
+      attachments.forEach((file) => {
+        formData.append('attachments', file);
+      });
+
       const res = await fetch('/api/pqrsd/anonymous', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
       const result = await res.json();
 
@@ -515,27 +525,6 @@ export default function App({ initialView = 'normal', allowSwitch = true }: AppP
         Saltar al contenido principal
       </a>
 
-      <header className={styles.header}>
-        <div className={styles.flagBar} aria-hidden="true" />
-        <div className={styles.headerInner}>
-          <div className={styles.brand}>
-            <div className={styles.brandIcon}>
-              <Landmark size={22} />
-            </div>
-            <div>
-              <h1 className={styles.brandTitle}>Alcaldía de Medellín</h1>
-              <p className={styles.brandSub}>Portal Ciudadano</p>
-            </div>
-          </div>
-          <div className={styles.topActions}>
-            <button className={styles.myRecords}>Mis Radicados</button>
-            <div className={styles.divider} />
-            <button className={styles.loginButton}>
-              <UserCircle size={18} /> Ingresar
-            </button>
-          </div>
-        </div>
-      </header>
 
       <section className={styles.hero}>
         <div className={styles.heroOverlay}>

@@ -51,13 +51,8 @@ export default function EntryFlowSelector() {
             onClick={openNormalReqForm}
             className={styles.card}
           >
-            <div className={`${styles.cardIcon} ${styles.normalIcon}`}>
-              <Building2 size={22} />
-            </div>
-            <h2 className={`${styles.cardTitle} font-display`}>Radicacion de pQRS</h2>
-            <p className={styles.cardText}>
-              Flujo completo para peticiones y solicitudes con identificación y contacto del solicitante.
-            </p>
+            <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS</h2>
+ 
             <span className={`${styles.cardCta} ${styles.cardCtaNormal}`}>
               Radicacion de PQRS
             </span>
@@ -68,13 +63,8 @@ export default function EntryFlowSelector() {
             onClick={goToAnonymousFlow}
             className={styles.card}
           >
-            <div className={`${styles.cardIcon} ${styles.anonIcon}`}>
-              <Lock size={22} />
-            </div>
             <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS anonimas</h2>
-            <p className={styles.cardText}>
-              Canal reservado para denuncias y reportes sin exponer la identidad del ciudadano.
-            </p>
+
             <span className={`${styles.cardCta} ${styles.cardCtaAnon}`}>
               Radicacion de PQRS anonimas
             </span>

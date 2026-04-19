@@ -242,32 +242,6 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
-
-.header {
-  background: rgba(255, 255, 255, 0.95);
-  border-bottom: 1px solid #e2e8f0;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  backdrop-filter: blur(4px);
-}
-
-.flagBar {
-  height: 0.25rem;
-  width: 100%;
-  background: linear-gradient(90deg, #fff 0%, #fff 50%, #00904c 50%, #00904c 100%);
-}
-
-.headerInner {
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: 0 1rem;
-  height: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .brand {
   display: flex;
   align-items: center;

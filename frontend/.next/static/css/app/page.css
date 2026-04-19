@@ -393,16 +393,7 @@
 
 .EntryFlowSelector_card__WmDzl:hover {
   box-shadow: 0 22px 60px -30px rgba(2, 43, 19, 0.55);
-}
-
-.EntryFlowSelector_cardIcon__1_WGM {
-  display: inline-flex;
-  width: 2.75rem;
-  height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.75rem;
-  margin-bottom: 1.25rem;
+  transition: all 0.2s ease;
 }
 
 .EntryFlowSelector_normalIcon__AuG5V {
@@ -419,12 +410,6 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #0f172a;
-}
-
-.EntryFlowSelector_cardText__C__KX {
-  color: #475569;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
 }
 
 .EntryFlowSelector_cardCta__xLbyz {

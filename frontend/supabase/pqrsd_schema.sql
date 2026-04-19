@@ -21,10 +21,14 @@ create table if not exists public.pqrsd_requests (
   city text,
   address text,
   attachments_count smallint not null default 0 check (attachments_count between 0 and 5),
+  attachments jsonb,
   payload jsonb not null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.pqrsd_requests
+  add column if not exists attachments jsonb;
 
 create index if not exists pqrsd_requests_created_at_idx
   on public.pqrsd_requests (created_at desc);
@@ -51,6 +55,10 @@ create trigger pqrsd_requests_set_updated_at
 before update on public.pqrsd_requests
 for each row
 execute function public.set_updated_at();
+
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('pqrsd-attachments', 'pqrsd-attachments', false, 10485760)
+on conflict (id) do nothing;
 
 alter table public.pqrsd_requests enable row level security;
 

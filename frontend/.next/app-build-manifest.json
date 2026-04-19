@@ -28,6 +28,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/pqrsd/anonymous/route.js"
+    ],
+    "/politica-tratamiento-datos/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/politica-tratamiento-datos/page.js"
     ]
   }
 }

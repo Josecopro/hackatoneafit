@@ -72,17 +72,9 @@
 
 .card:hover {
   box-shadow: 0 22px 60px -30px rgba(2, 43, 19, 0.55);
+  transition: all 0.2s ease;
 }
 
-.cardIcon {
-  display: inline-flex;
-  width: 2.75rem;
-  height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.75rem;
-  margin-bottom: 1.25rem;
-}
 
 .normalIcon {
   background: #d1fae5;
@@ -99,13 +91,6 @@
   font-weight: 700;
   color: #0f172a;
 }
-
-.cardText {
-  color: #475569;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
 .cardCta {
   display: inline-flex;
   align-items: center;
