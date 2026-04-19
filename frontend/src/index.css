@@ -10,8 +10,8 @@
   --color-emerald-500: #10b981;
   --color-emerald-600: #059669;
   --color-emerald-700: #047857;
-  --font-display: 'Montserrat', sans-serif;
-  --font-body: 'Source Sans 3', sans-serif;
+  --font-display: 'Metropolis', sans-serif;
+  --font-body: 'Arial', sans-serif;
 }
 
 body {
@@ -28,11 +28,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
 }
 
-.page-backdrop {
-  background-image:
-    radial-gradient(circle at 92% 12%, rgba(0, 144, 76, 0.08), transparent 35%),
-    radial-gradient(circle at 8% 35%, rgba(2, 132, 199, 0.04), transparent 30%);
-}
 
 .hero-grid-pattern {
   background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),

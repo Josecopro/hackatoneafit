@@ -1,0 +1,315 @@
+.stepCard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1.5rem;
+  box-shadow: 0 22px 50px -34px rgba(2, 43, 19, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s;
+}
+
+.stepBar {
+  height: 0.25rem;
+  width: 100%;
+  background: linear-gradient(to right, #047857, #10b981, #6ee7b7);
+}
+
+.stepHead {
+  background: rgba(248, 250, 252, 0.9);
+  border-bottom: 1px solid #f1f5f9;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stepNumber {
+  background: #d1fae5;
+  color: #065f46;
+  width: 2.5rem;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.stepTitle {
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.25;
+}
+
+.stepSubtitle {
+  color: #475569;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.stepBody {
+  padding: 1.25rem;
+}
+
+.fieldWrap {
+  margin-bottom: 1rem;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.375rem;
+}
+
+.inputControl {
+  width: 100%;
+  background: rgba(248, 250, 252, 0.7);
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  border-radius: 0.75rem;
+  display: block;
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.inputControl:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.inputControl:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.inputError {
+  border-color: #f87171;
+}
+
+.inputError:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+}
+
+.textareaControl {
+  width: 100%;
+  background: rgba(248, 250, 252, 0.7);
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  border-radius: 0.75rem;
+  display: block;
+  padding: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+}
+
+.textareaControl:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.textareaError {
+  border-color: #f87171;
+}
+
+.textareaError:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.attachmentRules {
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.attachmentRulesTitle {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.attachmentRulesList {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.attachmentWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.uploadLabel {
+  border: 2px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(248, 250, 252, 0.5);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.uploadLabel:hover {
+  background: rgba(236, 253, 245, 0.6);
+  border-color: #86efac;
+}
+
+.uploadIcon {
+  color: #047857;
+  margin-bottom: 0.5rem;
+}
+
+.uploadText {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.uploadHint {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.fileError {
+  color: #dc2626;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.selectedFiles {
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  background: #fff;
+}
+
+.selectedFilesTitle {
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.selectedFilesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.successCard {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 22px 50px -34px rgba(2, 43, 19, 0.5);
+  border: 1px solid #e2e8f0;
+  padding: 2rem;
+  text-align: center;
+  margin: 1rem auto 5rem;
+  max-width: 42rem;
+}
+
+.successIconWrap {
+  width: 5rem;
+  height: 5rem;
+  background: #d1fae5;
+  color: #047857;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.successTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.successDescription {
+  color: #475569;
+  max-width: 32rem;
+  margin: 0 auto 1.5rem;
+}
+
+.trackingCard {
+  background: rgba(236, 253, 245, 0.7);
+  border: 1px solid #d1fae5;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+  min-width: 18.75rem;
+}
+
+.trackingLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.trackingValue {
+  font-size: 1.875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  font-weight: 700;
+  color: #047857;
+}
+
+.secondaryButton {
+  border: 0;
+  background: #f1f5f9;
+  color: #1e293b;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  background: #e2e8f0;
+}
+
+@media (min-width: 768px) {
+  .stepHead,
+  .stepBody {
+    padding: 1.5rem;
+  }
+}

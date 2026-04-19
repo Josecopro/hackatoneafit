@@ -6,3 +6,12 @@ coverage/
 *.log
 .env*
 !.env.example
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/coverage/
+frontend/.DS_Store
+frontend/*.log
+frontend/.env*
+!frontend/.env.example
+frontend/.next/

@@ -1,18 +1,39 @@
 import { NextResponse } from 'next/server';
 import { anonymousSchema } from '@/src/schema';
+import { getSupabaseServerClient } from '@/src/lib/supabaseServer';
+import { buildTrackingId } from '@/src/lib/pqrsdTracking';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const validData = anonymousSchema.parse(body);
-    console.log('Received valid anonymous PQRSD:', validData);
+    const trackingId = buildTrackingId('ANON');
+    const supabase = getSupabaseServerClient();
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    const { error } = await supabase.from('pqrsd_requests').insert({
+      tracking_id: trackingId,
+      request_type: 'anonymous',
+      status: 'received',
+      subject: validData.subject,
+      description: validData.description,
+      incident_address: validData.incident_address,
+      email: validData.email || null,
+      phone: validData.phone || null,
+      attachments_count: validData.attachments_count,
+      payload: validData,
+    });
+
+    if (error) {
+      return NextResponse.json(
+        { success: false, errors: [{ message: 'No fue posible guardar la solicitud en Supabase.' }] },
+        { status: 500 },
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: 'PQRSD radicada exitosamente de forma anonima.',
-      trackingId: `ANON-${Math.floor(Math.random() * 90000) + 10000}`,
+      trackingId,
     });
   } catch (error: unknown) {
     const errors =

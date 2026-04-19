@@ -25,7 +25,7 @@ const optionalPhoneSchema = z.union([
 export const normalSchema = z
   .object({
     person_type: z.enum(['natural', 'juridica', 'nna', 'ente_publico'], {
-      errorMap: () => ({ message: 'Seleccione un tipo de persona' }),
+      message: 'Seleccione un tipo de persona',
     }),
     doc_type: z.string().optional().default(''),
     doc_number: baseDocumentNumberSchema.optional().default(''),
@@ -56,6 +56,7 @@ export const normalSchema = z
     accept_terms: z.boolean().refine((val) => val === true, {
       message: 'Debe aceptar los términos y condiciones',
     }),
+    attachments_count: z.number().int().min(0).max(5).optional().default(0),
   })
   .superRefine((data, ctx) => {
     if (data.email !== data.confirm_email) {
@@ -106,4 +107,5 @@ export const anonymousSchema = z.object({
   accept_terms: z.boolean().refine((val) => val === true, {
     message: 'Debe aceptar los términos y condiciones',
   }),
+  attachments_count: z.number().int().min(0).max(5).optional().default(0),
 });
