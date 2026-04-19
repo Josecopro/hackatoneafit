@@ -6,12 +6,6 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/radicacion/normal/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/radicacion/normal/page.css",
-      "static/chunks/app/radicacion/normal/page.js"
-    ],
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -29,10 +23,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/pqrsd/anonymous/route.js"
     ],
-    "/politica-tratamiento-datos/page": [
+    "/radicacion/normal/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/politica-tratamiento-datos/page.js"
+      "static/css/app/radicacion/normal/page.css",
+      "static/chunks/app/radicacion/normal/page.js"
     ]
   }
 }

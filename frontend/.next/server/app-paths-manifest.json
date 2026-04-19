@@ -1,6 +1,6 @@
 {
   "/api/pqrsd/anonymous/route": "app/api/pqrsd/anonymous/route.js",
+  "/radicacion/anonima/page": "app/radicacion/anonima/page.js",
   "/radicacion/normal/page": "app/radicacion/normal/page.js",
-  "/page": "app/page.js",
-  "/radicacion/anonima/page": "app/radicacion/anonima/page.js"
+  "/page": "app/page.js"
 }
