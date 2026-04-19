@@ -4,6 +4,11 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Alcaldia de Medellin - PQRSD',
   description: 'Portal ciudadano para radicacion de PQRSD',
+  icons: {
+    icon: '/fav.ico',
+    shortcut: '/fav.ico',
+    apple: '/fav.ico',
+  },
 };
 
 export default function RootLayout({

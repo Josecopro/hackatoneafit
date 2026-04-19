@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Building2, Landmark, Lock } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { InputField, StepCard } from '@/components/forms/sharedFields';
 import styles from './EntryFlowSelector.module.scss';
@@ -19,10 +19,13 @@ type NormalEntryPrefill = {
   accept_policy: boolean;
 };
 
+type FlowSelection = 'normal' | 'anonymous' | null;
+
 export default function EntryFlowSelector() {
   const router = useRouter();
   const [showNormalReqForm, setShowNormalReqForm] = useState(false);
   const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+<<<<<<< HEAD
   const [entryError, setEntryError] = useState('');
 
   useEffect(() => {
@@ -41,6 +44,9 @@ export default function EntryFlowSelector() {
       window.clearTimeout(timer);
     };
   }, []);
+=======
+  const [selectedFlow, setSelectedFlow] = useState<FlowSelection>(null);
+>>>>>>> 2e2d95f (added favico and moving some flows)
 
   const goToAnonymousFlow = () => {
     router.push('/radicacion/anonima');
@@ -58,12 +64,24 @@ export default function EntryFlowSelector() {
     }
   };
 
-  const openNormalReqForm = () => {
-    setShowNormalReqForm(true);
+  const openFlowWithPopup = (flow: Exclude<FlowSelection, null>) => {
+    setSelectedFlow(flow);
+    setShowSuggestionPopup(true);
   };
 
   const closeSuggestionPopup = () => {
     setShowSuggestionPopup(false);
+
+    if (selectedFlow === 'normal') {
+      setShowNormalReqForm(true);
+    }
+
+    if (selectedFlow === 'anonymous') {
+      goToAnonymousFlow();
+    }
+
+    setSelectedFlow(null);
+
     try {
       sessionStorage.setItem(ENTRY_SUGGESTION_POPUP_DISMISSED_KEY, '1');
     } catch {
@@ -128,7 +146,7 @@ export default function EntryFlowSelector() {
         <section className={styles.cards}>
           <button
             type="button"
-            onClick={openNormalReqForm}
+            onClick={() => openFlowWithPopup('normal')}
             className={styles.card}
           >
             <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS</h2>
@@ -140,7 +158,7 @@ export default function EntryFlowSelector() {
 
           <button
             type="button"
-            onClick={goToAnonymousFlow}
+            onClick={() => openFlowWithPopup('anonymous')}
             className={styles.card}
           >
             <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS anonimas</h2>
