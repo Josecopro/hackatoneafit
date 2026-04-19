@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import PqrsReplyView from '@/modules/admin-pqrs/PqrsReplyView';
 import { getPqrsById } from '@/modules/admin-pqrs/utils';
 
+export const dynamic = 'force-dynamic';
+
 type AdminPqrsReplyPageProps = {
   params: Promise<{
     id: string;

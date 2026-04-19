@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import PqrsListView from '@/modules/admin-pqrs/PqrsListView';
 import { getPqrsOldestFirst } from '@/modules/admin-pqrs/utils';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Administracion PQRSD - Listado',
 };
