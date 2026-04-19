@@ -17,6 +17,7 @@ import {
   SuccessView,
   TextareaField,
 } from '@/components/forms/sharedFields';
+import { getBackendUrl } from '@/lib/backendUrl';
 import styles from '@/App.module.scss';
 
 const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
@@ -119,7 +120,8 @@ export default function NormalPqrsForm() {
         formData.append('attachments', file);
       });
 
-      const res = await fetch('/api/pqrsd/normal', {
+      const backendUrl = getBackendUrl();
+      const res = await fetch(`${backendUrl}/api/pqrsd/normal`, {
         method: 'POST',
         body: formData,
       });

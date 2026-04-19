@@ -72,7 +72,7 @@ class SupabaseStorageClient:
             if response.status_code >= 400:
                 await self.remove_attachments(uploaded)
                 raise SupabaseStorageError(
-                    f"No fue posible subir el archivo {file_name}."
+                    f"No fue posible subir el archivo {file_name} (HTTP {response.status_code})."
                 )
 
             uploaded.append(

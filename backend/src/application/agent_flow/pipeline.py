@@ -174,7 +174,7 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
 
     # If the request is out of scope for this Secretaría, stop processing.
     if not state.es_competencia_secretaria:
-        state.estado = "closed"
+        state.estado = "in_review"
         state.requiere_humano = True
         state.motivo_no_competencia = (
             state.motivo_no_competencia
@@ -261,8 +261,11 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
             state.razon_revision = "LLM draft returned non-letter payload format; human legal review required."
         else:
             state.borrador_respuesta = draft.borrador_respuesta
-            state.requiere_humano = draft.requiere_humano
-            state.razon_revision = draft.razon_revision
+            state.requiere_humano = True
+            state.razon_revision = (
+                draft.razon_revision
+                or "Borrador generado por IA; requiere validacion humana antes de envio."
+            )
     except RuntimeError as exc:
         out_topics = summarize_out_of_scope_topics(state.texto_original)
         topics_line = (
@@ -284,8 +287,12 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
 
     state.ciclos_correccion = 1
     state.placeholders_usados = False
-    if not state.requiere_humano:
-        state.estado = "closed"
+    state.requiere_humano = True
+    state.estado = "in_review"
+    if not state.razon_revision:
+        state.razon_revision = (
+            "Borrador generado por IA; requiere validacion humana antes de envio."
+        )
 
     state.fragmento_competente = sanitize_personal_data(state.fragmento_competente)
     state.fuera_competencia = sanitize_personal_data_list(state.fuera_competencia)

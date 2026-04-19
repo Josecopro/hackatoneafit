@@ -103,3 +103,30 @@ class AgentFlowRunResponse(BaseModel):
     success: bool
     message: str
     data: AgentFlowSummary
+
+
+class AdminPqrsListItem(BaseModel):
+    id: str
+    ticket: str
+    citizen_name: str
+    subject: str
+    directed_to: str
+    status: str
+    created_at: str
+    business_days_elapsed: int
+    business_days_limit: int
+    sentimiento_score: float
+
+
+class AdminPqrsDetail(BaseModel):
+    id: str
+    ticket: str
+    citizen_name: str
+    subject: str
+    description: str
+    directed_to: str
+    status: str
+    created_at: str
+    business_days_elapsed: int
+    business_days_limit: int
+    sentimiento_score: float

@@ -1,4 +1,8 @@
+"use client";
+
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './AdminViews.module.scss';
 import { formatDate } from './utils';
 import type { PqrsRecord } from './types';
@@ -8,6 +12,66 @@ type PqrsReplyViewProps = {
 };
 
 export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
+  const router = useRouter();
+  const initialOfficialReply = useMemo(() => {
+    const draft = (record.draftResponse || '').trim();
+    if (draft) {
+      return draft;
+    }
+
+    const summary = record.description?.trim() || record.subject;
+    return [
+      `Radicado ${record.ticket}`,
+      '',
+      'Respuesta oficial en construccion (borrador inicial):',
+      summary,
+      '',
+      'Este contenido requiere validacion humana antes del envio.',
+    ].join('\n');
+  }, [record.description, record.draftResponse, record.subject, record.ticket]);
+
+  const [officialReply, setOfficialReply] = useState(initialOfficialReply);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (!isSubmitted) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      router.push('/administracion/pqrs');
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [isSubmitted, router]);
+
+  if (isSubmitted) {
+    return (
+      <main className={styles.shell}>
+        <div className={styles.container}>
+          <section className={`${styles.card} ${styles.loginCard}`}>
+            <h1 className={styles.title}>Respuesta enviada</h1>
+            <p className={styles.subtitle}>
+              La respuesta oficial del radicado {record.ticket} fue enviada correctamente al correo registrado del ciudadano.
+            </p>
+            <p className={styles.helperText}>Seras redirigido al listado en unos segundos...</p>
+            <div className={styles.actions}>
+              <button
+                className={styles.primaryButton}
+                type="button"
+                onClick={() => router.push('/administracion/pqrs')}
+              >
+                Volver ahora al listado
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className={styles.shell}>
       <div className={styles.container}>
@@ -44,10 +108,18 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
           <article className={`${styles.card} ${styles.responseCard}`}>
             <h2 className={styles.infoTitle}>Redactar respuesta</h2>
             <p className={styles.metaLine}>
-              Esta pantalla deja listo el flujo de respuesta. La logica de guardado se conecta en la siguiente fase.
+              Esta respuesta se genera como borrador y requiere validacion humana obligatoria antes del envio oficial.
+            </p>
+            <p className={styles.metaLine}>
+              {record.reviewReason}
             </p>
 
-            <form>
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                setIsSubmitted(true);
+              }}
+            >
               <label className={styles.label} htmlFor="response-message">
                 Respuesta oficial
               </label>
@@ -55,6 +127,8 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
                 className={styles.textarea}
                 id="response-message"
                 placeholder="Escribe aqui la respuesta al ciudadano..."
+                value={officialReply}
+                onChange={(event) => setOfficialReply(event.target.value)}
               />
 
               <div className={styles.actions}>

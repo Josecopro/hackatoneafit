@@ -42,3 +42,11 @@ cp .env.example .env.local
 - `GET /health`
 - `POST /api/pqrsd/normal`
 - `POST /api/pqrsd/anonymous`
+
+## Migraciones SQL
+
+El repositorio incluye una migracion idempotente para el modelo actual de `pqrsd_requests`:
+
+- `backend/migrations/20260419_pqrsd_requests_admin_models.sql`
+
+Como en este proyecto no hay Supabase CLI configurado, puedes ejecutarla desde el SQL Editor de Supabase.

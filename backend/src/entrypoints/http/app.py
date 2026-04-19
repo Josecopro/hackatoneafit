@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timedelta, timezone
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +15,8 @@ from src.domain.services.tracking import build_tracking_id
 from src.entrypoints.http.schemas import (
     AgentFlowRunResponse,
     AgentFlowSummary,
+    AdminPqrsDetail,
+    AdminPqrsListItem,
     AnonymousPayloadIn,
     CreateResponse,
     NormalPayloadIn,
@@ -57,6 +60,66 @@ def build_app() -> FastAPI:
     @app.get("/health")
     async def health() -> dict:
         return {"ok": True}
+
+    def _parse_datetime(raw_value: str) -> datetime:
+        candidate = (raw_value or "").strip()
+        if candidate.endswith("Z"):
+            candidate = candidate[:-1] + "+00:00"
+
+        try:
+            parsed = datetime.fromisoformat(candidate)
+        except ValueError:
+            return datetime.now(timezone.utc)
+
+        if parsed.tzinfo is None:
+            return parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+
+    def _business_days_elapsed(created_at: str) -> int:
+        start = _parse_datetime(created_at).date()
+        end = datetime.now(timezone.utc).date()
+        if start > end:
+            return 0
+
+        days = 0
+        current = start
+        while current <= end:
+            if current.weekday() < 5:
+                days += 1
+            current += timedelta(days=1)
+        return days
+
+    def _status_label(status: str) -> str:
+        lowered = (status or "").strip().lower()
+        if lowered in {"received", "radicada"}:
+            return "Radicada"
+        if lowered in {"in_review", "en_revision", "en revision"}:
+            return "En revision"
+        if lowered in {"closed", "respondida"}:
+            return "Respondida"
+        return "En revision"
+
+    def _build_admin_item(record: dict) -> AdminPqrsListItem:
+        payload = record.get("payload") if isinstance(record.get("payload"), dict) else {}
+        flow = payload.get("agent_flow") if isinstance(payload.get("agent_flow"), dict) else {}
+
+        created_at = str(record.get("created_at") or "")
+        status = str(flow.get("estado") or record.get("status") or "received")
+        business_days_limit = int(flow.get("dias_limite_ley_1755") or 15)
+        sentimiento_score = float(flow.get("sentimiento_score") or 0.0)
+
+        return AdminPqrsListItem(
+            id=str(record.get("id") or ""),
+            ticket=str(record.get("tracking_id") or ""),
+            citizen_name=str(record.get("full_name") or "Anonimo"),
+            subject=str(record.get("subject") or "Sin asunto"),
+            directed_to=str(flow.get("departamento") or "Secretaria de Desarrollo Economico"),
+            status=_status_label(status),
+            created_at=created_at,
+            business_days_elapsed=_business_days_elapsed(created_at),
+            business_days_limit=business_days_limit,
+            sentimiento_score=sentimiento_score,
+        )
 
     @app.post("/api/pqrsd/normal", response_model=CreateResponse)
     async def create_normal_request(
@@ -148,6 +211,113 @@ def build_app() -> FastAPI:
             success=True,
             message="PQRSD radicada exitosamente de forma anonima.",
             trackingId=tracking_id,
+        )
+
+    @app.get("/api/admin/pqrs", response_model=list[AdminPqrsListItem])
+    async def list_admin_pqrs() -> list[AdminPqrsListItem]:
+        try:
+            rows = await repository.fetch_requests(limit=200)
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        items = [_build_admin_item(row) for row in rows]
+        items.sort(
+            key=lambda item: (
+                -item.business_days_elapsed,
+                item.sentimiento_score,
+                item.created_at,
+            )
+        )
+        return items
+
+    @app.get("/api/admin/pqrs/{request_id}", response_model=AdminPqrsDetail)
+    async def get_admin_pqrs(request_id: str) -> AdminPqrsDetail:
+        try:
+            row = await repository.fetch_request_by_id(request_id)
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        if not row:
+            raise HTTPException(status_code=404, detail="PQRS no encontrada.")
+
+        payload = row.get("payload") if isinstance(row.get("payload"), dict) else {}
+        flow = (
+            payload.get("agent_flow")
+            if isinstance(payload.get("agent_flow"), dict)
+            else {}
+        )
+
+        # Ensure reply view always has a draft available for human review.
+        if not str(flow.get("borrador_respuesta") or "").strip():
+            state = run_minimal_agent_flow(row)
+            updated_payload = {
+                **payload,
+                "agent_flow": {
+                    **flow,
+                    "departamento": state.departamento,
+                    "estado": state.estado,
+                    "es_competencia_secretaria": state.es_competencia_secretaria,
+                    "motivo_no_competencia": state.motivo_no_competencia,
+                    "detalle_competencia": state.detalle_competencia,
+                    "fragmento_competente": state.fragmento_competente,
+                    "fuera_competencia": state.fuera_competencia,
+                    "sentimiento_label": state.sentimiento_label,
+                    "sentimiento_score": state.sentimiento_score,
+                    "tipo_peticion": state.tipo_peticion,
+                    "dias_limite_ley_1755": state.dias_limite_ley_1755,
+                    "fecha_limite_respuesta": state.fecha_limite_respuesta,
+                    "normativas_halladas": state.normativas_halladas,
+                    "respuestas_oro_halladas": state.respuestas_oro_halladas,
+                    "sin_contexto_legal": state.sin_contexto_legal,
+                    "borrador_respuesta": state.borrador_respuesta,
+                    "requiere_humano": True,
+                    "razon_revision": (
+                        state.razon_revision
+                        or "Borrador generado por IA; requiere validacion humana antes de envio."
+                    ),
+                    "placeholders_usados": state.placeholders_usados,
+                    "ciclos_correccion": state.ciclos_correccion,
+                    "fuentes_gov_permitidas": ALLOWED_GOV_SOURCES,
+                },
+            }
+
+            patched = await repository.patch_request(
+                request_id=request_id,
+                updates={
+                    "status": state.estado,
+                    "payload": updated_payload,
+                },
+            )
+            if patched:
+                row = patched
+                payload = (
+                    row.get("payload") if isinstance(row.get("payload"), dict) else {}
+                )
+                flow = (
+                    payload.get("agent_flow")
+                    if isinstance(payload.get("agent_flow"), dict)
+                    else {}
+                )
+
+        item = _build_admin_item(row)
+        return AdminPqrsDetail(
+            id=item.id,
+            ticket=item.ticket,
+            citizen_name=item.citizen_name,
+            subject=item.subject,
+            description=str(row.get("description") or ""),
+            borrador_respuesta=str(flow.get("borrador_respuesta") or ""),
+            requiere_humano=True,
+            razon_revision=str(
+                flow.get("razon_revision")
+                or "Borrador generado por IA; requiere validacion humana antes de envio."
+            ),
+            directed_to=item.directed_to,
+            status=item.status,
+            created_at=item.created_at,
+            business_days_elapsed=item.business_days_elapsed,
+            business_days_limit=item.business_days_limit,
+            sentimiento_score=item.sentimiento_score,
         )
 
     @app.post("/api/admin/agent-flow/run-latest", response_model=AgentFlowRunResponse)

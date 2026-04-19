@@ -16,6 +16,7 @@ import {
   SuccessView,
   TextareaField,
 } from '@/components/forms/sharedFields';
+import { getBackendUrl } from '@/lib/backendUrl';
 import styles from '@/App.module.scss';
 
 export default function AnonymousPqrsForm() {
@@ -60,7 +61,8 @@ export default function AnonymousPqrsForm() {
         formData.append('attachments', file);
       });
 
-      const res = await fetch('/api/pqrsd/anonymous', {
+      const backendUrl = getBackendUrl();
+      const res = await fetch(`${backendUrl}/api/pqrsd/anonymous`, {
         method: 'POST',
         body: formData,
       });

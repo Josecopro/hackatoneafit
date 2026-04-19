@@ -8,9 +8,15 @@ export interface PqrsRecord {
   citizenName: string;
   subject: string;
   description: string;
+  draftResponse: string;
+  requiresHumanReview: boolean;
+  reviewReason: string;
   directedTo: string;
   status: PqrsStatus;
   priority: PqrsPriority;
   createdAt: string;
+  businessDaysElapsed: number;
+  businessDaysLimit: number;
+  sentimentScore: number;
   lastResponseAt?: string;
 }

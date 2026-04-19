@@ -22,6 +22,14 @@ class Settings:
             raise RuntimeError("Missing SUPABASE_URL")
         if not self.supabase_service_role_key:
             raise RuntimeError("Missing SUPABASE_SERVICE_ROLE_KEY")
+        if self.supabase_service_role_key.startswith("sb_publishable_"):
+            raise RuntimeError(
+                "SUPABASE_SERVICE_ROLE_KEY is using a publishable key. Use the service_role key from Supabase settings."
+            )
+        if self.supabase_service_role_key.startswith("sb_anon_"):
+            raise RuntimeError(
+                "SUPABASE_SERVICE_ROLE_KEY is using an anon key. Use the service_role key from Supabase settings."
+            )
 
     @staticmethod
     def _parse_origins(raw_value: str | None) -> list[str]:

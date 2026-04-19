@@ -1,6 +1,14 @@
+"use client";
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './AdminViews.module.scss';
-import { formatDate, getPqrsOldestFirst } from './utils';
+import { formatDate } from './utils';
+import type { PqrsRecord } from './types';
+
+type PqrsListViewProps = {
+  records: PqrsRecord[];
+};
 
 function statusClass(status: string): string {
   if (status === 'Radicada') return `${styles.badge} ${styles.statusRadicada}`;
@@ -8,8 +16,12 @@ function statusClass(status: string): string {
   return `${styles.badge} ${styles.statusRespondida}`;
 }
 
-export default function PqrsListView() {
-  const pqrs = getPqrsOldestFirst();
+export default function PqrsListView({ records }: PqrsListViewProps) {
+  const router = useRouter();
+  const goToReply = (id: string) => {
+    if (!id) return;
+    router.push(`/administracion/pqrs/${encodeURIComponent(id)}/responder`);
+  };
 
   return (
     <main className={styles.shell}>
@@ -25,11 +37,11 @@ export default function PqrsListView() {
           <header className={styles.listHeader}>
             <h1 className={styles.title}>Listado de PQRSD</h1>
             <p className={styles.metaLine}>
-              Orden actual: de la mas antigua a la mas reciente. En la siguiente fase se agrega segmentacion por dependencia.
+              Orden actual: priorizado por dias habiles transcurridos y nivel de sentimiento para atencion operativa.
             </p>
           </header>
 
-          {pqrs.length === 0 ? (
+          {records.length === 0 ? (
             <p className={styles.emptyState}>No hay registros para mostrar.</p>
           ) : (
             <div className={styles.tableWrap}>
@@ -41,23 +53,45 @@ export default function PqrsListView() {
                     <th>Ciudadano</th>
                     <th>Asunto</th>
                     <th>Dirigido a</th>
+                    <th>Dias habiles</th>
                     <th>Estado</th>
                     <th>Accion</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {pqrs.map((record) => (
-                    <tr key={record.id}>
+                  {records.map((record) => (
+                    <tr
+                      key={record.id}
+                      onClick={() => goToReply(record.id)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          goToReply(record.id);
+                        }
+                      }}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Abrir PQRS ${record.ticket}`}
+                    >
                       <td>{record.ticket}</td>
                       <td>{formatDate(record.createdAt)}</td>
                       <td>{record.citizenName}</td>
                       <td>{record.subject}</td>
                       <td>{record.directedTo}</td>
                       <td>
+                        {record.businessDaysElapsed}
+                        /
+                        {record.businessDaysLimit}
+                      </td>
+                      <td>
                         <span className={statusClass(record.status)}>{record.status}</span>
                       </td>
                       <td>
-                        <Link className={styles.linkButton} href={`/administracion/pqrs/${record.id}/responder`}>
+                        <Link
+                          className={styles.linkButton}
+                          href={`/administracion/pqrs/${encodeURIComponent(record.id)}/responder`}
+                          onClick={(event) => event.stopPropagation()}
+                        >
                           Responder
                         </Link>
                       </td>

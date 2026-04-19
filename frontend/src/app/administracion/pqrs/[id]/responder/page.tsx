@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function AdminPqrsReplyPage({ params }: AdminPqrsReplyPageProps) {
   const { id } = await params;
-  const record = getPqrsById(id);
+  const record = await getPqrsById(id);
 
   if (!record) {
     notFound();
