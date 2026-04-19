@@ -1,7 +1,9 @@
 type PersistMode = 'normal' | 'anonymous';
 
 function getBackendBaseUrl(): string {
-  return (process.env.BACKEND_BASE_URL || '').trim().replace(/\/$/, '');
+  return (process.env.BACKEND_BASE_URL || process.env.NEXT_PUBLIC_BACKEND_BASE_URL || '')
+    .trim()
+    .replace(/\/$/, '');
 }
 
 type AdminLoginResult = {

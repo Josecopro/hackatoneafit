@@ -48,9 +48,8 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Ticket</th>
                     <th>Fecha radicacion</th>
-                    <th>Ciudadano</th>
+                    <th>Ticket</th>
                     <th>Asunto</th>
                     <th>Dirigido a</th>
                     <th>Dias habiles</th>
@@ -73,10 +72,13 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
                       role="button"
                       aria-label={`Abrir PQRS ${record.ticket}`}
                     >
-                      <td>{record.ticket}</td>
                       <td>{formatDate(record.createdAt)}</td>
-                      <td>{record.citizenName}</td>
-                      <td>{record.subject}</td>
+                      <td>{record.ticket}</td>
+                      <td className={styles.subjectCell}>
+                        <span className={styles.subjectText} title={record.subject}>
+                          {record.subject}
+                        </span>
+                      </td>
                       <td>{record.directedTo}</td>
                       <td>
                         {record.businessDaysElapsed}

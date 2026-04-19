@@ -60,7 +60,8 @@ export async function getPqrsOldestFirst(): Promise<PqrsRecord[]> {
   });
 
   if (!response.ok) {
-    throw new Error('No fue posible consultar el listado de PQRSD.');
+    const body = (await response.json().catch(() => ({}))) as { detail?: string };
+    throw new Error(body.detail || 'No fue posible consultar el listado de PQRSD.');
   }
 
   const items = (await response.json()) as AdminPqrsListItem[];
@@ -78,7 +79,8 @@ export async function getPqrsById(id: string): Promise<PqrsRecord | null> {
   }
 
   if (!response.ok) {
-    throw new Error('No fue posible consultar el detalle de la PQRSD.');
+    const body = (await response.json().catch(() => ({}))) as { detail?: string };
+    throw new Error(body.detail || 'No fue posible consultar el detalle de la PQRSD.');
   }
 
   const item = (await response.json()) as AdminPqrsDetail;

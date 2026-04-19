@@ -6,26 +6,18 @@ from datetime import datetime, timedelta, timezone
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-<<<<<<< HEAD
-from src.application.agent_flow import run_minimal_agent_flow
-from src.application.agent_flow.knowledge_base import ALLOWED_GOV_SOURCES
-=======
 from src.application.use_cases.admin_login import AdminLoginUseCase
->>>>>>> 2ca1bd6 (added auth with supabase!)
 from src.application.use_cases.create_anonymous_pqrsd import CreateAnonymousPqrsdUseCase
 from src.application.use_cases.create_normal_pqrsd import CreateNormalPqrsdUseCase
 from src.domain.services.errors import AuthenticationError, PersistenceError
 from src.domain.services.tracking import build_tracking_id
 from src.entrypoints.http.schemas import (
-<<<<<<< HEAD
     AgentFlowRunResponse,
     AgentFlowSummary,
-    AdminPqrsDetail,
-    AdminPqrsListItem,
-=======
     AdminLoginIn,
     AdminLoginResponse,
->>>>>>> 2ca1bd6 (added auth with supabase!)
+    AdminPqrsDetail,
+    AdminPqrsListItem,
     AnonymousPayloadIn,
     CreateResponse,
     NormalPayloadIn,
@@ -78,7 +70,39 @@ def build_app() -> FastAPI:
     async def health() -> dict:
         return {"ok": True}
 
-<<<<<<< HEAD
+    def _load_agent_flow_dependencies():
+        try:
+            from src.application.agent_flow import run_minimal_agent_flow
+            from src.application.agent_flow.knowledge_base import ALLOWED_GOV_SOURCES
+
+            return run_minimal_agent_flow, ALLOWED_GOV_SOURCES
+        except ModuleNotFoundError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "El modulo de agentes no esta disponible en el backend actual. "
+                    "Instala las dependencias del flujo de agentes para habilitar esta funcionalidad."
+                ),
+            ) from exc
+
+    @app.post("/api/admin/auth/login", response_model=AdminLoginResponse)
+    async def admin_login_endpoint(payload: AdminLoginIn) -> AdminLoginResponse:
+        try:
+            admin = await admin_login.execute(
+                email=payload.email,
+                password=payload.password,
+            )
+        except AuthenticationError as exc:
+            raise HTTPException(status_code=401, detail=str(exc)) from exc
+        except PersistenceError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        return AdminLoginResponse(
+            success=True,
+            adminEmail=admin["email"],
+            adminName=admin["full_name"],
+        )
+
     def _parse_datetime(raw_value: str) -> datetime:
         candidate = (raw_value or "").strip()
         if candidate.endswith("Z"):
@@ -137,24 +161,6 @@ def build_app() -> FastAPI:
             business_days_elapsed=_business_days_elapsed(created_at),
             business_days_limit=business_days_limit,
             sentimiento_score=sentimiento_score,
-=======
-    @app.post("/api/admin/auth/login", response_model=AdminLoginResponse)
-    async def admin_login_endpoint(payload: AdminLoginIn) -> AdminLoginResponse:
-        try:
-            admin = await admin_login.execute(
-                email=payload.email,
-                password=payload.password,
-            )
-        except AuthenticationError as exc:
-            raise HTTPException(status_code=401, detail=str(exc)) from exc
-        except PersistenceError as exc:
-            raise HTTPException(status_code=500, detail=str(exc)) from exc
-
-        return AdminLoginResponse(
-            success=True,
-            adminEmail=admin["email"],
-            adminName=admin["full_name"],
->>>>>>> 2ca1bd6 (added auth with supabase!)
         )
 
     @app.post("/api/pqrsd/normal", response_model=CreateResponse)
@@ -285,55 +291,61 @@ def build_app() -> FastAPI:
 
         # Ensure reply view always has a draft available for human review.
         if not str(flow.get("borrador_respuesta") or "").strip():
-            state = run_minimal_agent_flow(row)
-            updated_payload = {
-                **payload,
-                "agent_flow": {
-                    **flow,
-                    "departamento": state.departamento,
-                    "estado": state.estado,
-                    "es_competencia_secretaria": state.es_competencia_secretaria,
-                    "motivo_no_competencia": state.motivo_no_competencia,
-                    "detalle_competencia": state.detalle_competencia,
-                    "fragmento_competente": state.fragmento_competente,
-                    "fuera_competencia": state.fuera_competencia,
-                    "sentimiento_label": state.sentimiento_label,
-                    "sentimiento_score": state.sentimiento_score,
-                    "tipo_peticion": state.tipo_peticion,
-                    "dias_limite_ley_1755": state.dias_limite_ley_1755,
-                    "fecha_limite_respuesta": state.fecha_limite_respuesta,
-                    "normativas_halladas": state.normativas_halladas,
-                    "respuestas_oro_halladas": state.respuestas_oro_halladas,
-                    "sin_contexto_legal": state.sin_contexto_legal,
-                    "borrador_respuesta": state.borrador_respuesta,
-                    "requiere_humano": True,
-                    "razon_revision": (
-                        state.razon_revision
-                        or "Borrador generado por IA; requiere validacion humana antes de envio."
-                    ),
-                    "placeholders_usados": state.placeholders_usados,
-                    "ciclos_correccion": state.ciclos_correccion,
-                    "fuentes_gov_permitidas": ALLOWED_GOV_SOURCES,
-                },
-            }
+            try:
+                run_minimal_agent_flow, allowed_gov_sources = _load_agent_flow_dependencies()
+                state = run_minimal_agent_flow(row)
+                updated_payload = {
+                    **payload,
+                    "agent_flow": {
+                        **flow,
+                        "departamento": state.departamento,
+                        "estado": state.estado,
+                        "es_competencia_secretaria": state.es_competencia_secretaria,
+                        "motivo_no_competencia": state.motivo_no_competencia,
+                        "detalle_competencia": state.detalle_competencia,
+                        "fragmento_competente": state.fragmento_competente,
+                        "fuera_competencia": state.fuera_competencia,
+                        "sentimiento_label": state.sentimiento_label,
+                        "sentimiento_score": state.sentimiento_score,
+                        "tipo_peticion": state.tipo_peticion,
+                        "dias_limite_ley_1755": state.dias_limite_ley_1755,
+                        "fecha_limite_respuesta": state.fecha_limite_respuesta,
+                        "normativas_halladas": state.normativas_halladas,
+                        "respuestas_oro_halladas": state.respuestas_oro_halladas,
+                        "sin_contexto_legal": state.sin_contexto_legal,
+                        "borrador_respuesta": state.borrador_respuesta,
+                        "requiere_humano": True,
+                        "razon_revision": (
+                            state.razon_revision
+                            or "Borrador generado por IA; requiere validacion humana antes de envio."
+                        ),
+                        "placeholders_usados": state.placeholders_usados,
+                        "ciclos_correccion": state.ciclos_correccion,
+                        "fuentes_gov_permitidas": allowed_gov_sources,
+                    },
+                }
 
-            patched = await repository.patch_request(
-                request_id=request_id,
-                updates={
-                    "status": state.estado,
-                    "payload": updated_payload,
-                },
-            )
-            if patched:
-                row = patched
-                payload = (
-                    row.get("payload") if isinstance(row.get("payload"), dict) else {}
+                patched = await repository.patch_request(
+                    request_id=request_id,
+                    updates={
+                        "status": state.estado,
+                        "payload": updated_payload,
+                    },
                 )
-                flow = (
-                    payload.get("agent_flow")
-                    if isinstance(payload.get("agent_flow"), dict)
-                    else {}
-                )
+                if patched:
+                    row = patched
+                    payload = (
+                        row.get("payload") if isinstance(row.get("payload"), dict) else {}
+                    )
+                    flow = (
+                        payload.get("agent_flow")
+                        if isinstance(payload.get("agent_flow"), dict)
+                        else {}
+                    )
+            except HTTPException:
+                # If agent dependencies are not available, keep the view operational
+                # and let the reviewer answer manually without generated draft.
+                pass
 
         item = _build_admin_item(row)
         return AdminPqrsDetail(
@@ -358,6 +370,8 @@ def build_app() -> FastAPI:
 
     @app.post("/api/admin/agent-flow/run-latest", response_model=AgentFlowRunResponse)
     async def run_latest_agent_flow() -> AgentFlowRunResponse:
+        run_minimal_agent_flow, allowed_gov_sources = _load_agent_flow_dependencies()
+
         latest = await repository.fetch_latest_request()
         if not latest:
             raise HTTPException(
@@ -406,7 +420,7 @@ def build_app() -> FastAPI:
                 "razon_revision": state.razon_revision,
                 "placeholders_usados": state.placeholders_usados,
                 "ciclos_correccion": state.ciclos_correccion,
-                "fuentes_gov_permitidas": ALLOWED_GOV_SOURCES,
+                "fuentes_gov_permitidas": allowed_gov_sources,
             },
         }
 
@@ -437,7 +451,7 @@ def build_app() -> FastAPI:
             fragmento_competente=state.fragmento_competente,
             fuera_competencia=state.fuera_competencia,
             normativas_halladas=state.normativas_halladas,
-            fuentes_gov_permitidas=ALLOWED_GOV_SOURCES,
+            fuentes_gov_permitidas=allowed_gov_sources,
         )
 
         return AgentFlowRunResponse(
@@ -448,6 +462,8 @@ def build_app() -> FastAPI:
 
     @app.get("/api/admin/agent-flow/latest", response_model=AgentFlowSummary)
     async def get_latest_agent_flow() -> AgentFlowSummary:
+        _, allowed_gov_sources = _load_agent_flow_dependencies()
+
         latest = await repository.fetch_latest_request()
         if not latest:
             raise HTTPException(status_code=404, detail="No hay PQRS registradas.")
@@ -483,7 +499,7 @@ def build_app() -> FastAPI:
             fuera_competencia=list(flow.get("fuera_competencia") or []),
             normativas_halladas=list(flow.get("normativas_halladas") or []),
             fuentes_gov_permitidas=list(
-                flow.get("fuentes_gov_permitidas") or ALLOWED_GOV_SOURCES
+                flow.get("fuentes_gov_permitidas") or allowed_gov_sources
             ),
         )
 

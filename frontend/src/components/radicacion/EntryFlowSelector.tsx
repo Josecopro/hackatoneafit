@@ -25,28 +25,9 @@ export default function EntryFlowSelector() {
   const router = useRouter();
   const [showNormalReqForm, setShowNormalReqForm] = useState(false);
   const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
-<<<<<<< HEAD
   const [entryError, setEntryError] = useState('');
 
-  useEffect(() => {
-    try {
-      const alreadyDismissed = sessionStorage.getItem(ENTRY_SUGGESTION_POPUP_DISMISSED_KEY) === '1';
-      if (alreadyDismissed) return;
-    } catch {
-      // Ignore storage read errors and fallback to showing popup.
-    }
-
-    const timer = window.setTimeout(() => {
-      setShowSuggestionPopup(true);
-    }, 2400);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, []);
-=======
   const [selectedFlow, setSelectedFlow] = useState<FlowSelection>(null);
->>>>>>> 2e2d95f (added favico and moving some flows)
 
   const goToAnonymousFlow = () => {
     router.push('/radicacion/anonima');

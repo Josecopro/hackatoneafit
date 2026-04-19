@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+
 import httpx
 
 from src.domain.services.errors import PersistenceError
@@ -10,6 +12,22 @@ class SupabasePqrsdRepository:
         self._base_url = supabase_url.rstrip("/")
         self._service_role_key = service_role_key
 
+    async def _request_with_retry(self, method: str, url: str, **kwargs) -> httpx.Response:
+        last_error: httpx.HTTPError | None = None
+
+        for attempt in range(3):
+            try:
+                async with httpx.AsyncClient(timeout=20.0) as client:
+                    return await client.request(method, url, **kwargs)
+            except httpx.HTTPError as exc:
+                last_error = exc
+                if attempt < 2:
+                    await asyncio.sleep(0.4 * (attempt + 1))
+
+        raise PersistenceError(
+            "No fue posible conectar con Supabase. Verifica DNS/red y vuelve a intentar."
+        ) from last_error
+
     async def insert_request(self, record: dict) -> None:
         url = f"{self._base_url}/rest/v1/pqrsd_requests"
         headers = {
@@ -19,8 +37,12 @@ class SupabasePqrsdRepository:
             "Prefer": "return=minimal",
         }
 
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            response = await client.post(url, headers=headers, json=record)
+        response = await self._request_with_retry(
+            "POST",
+            url,
+            headers=headers,
+            json=record,
+        )
 
         if response.status_code >= 400:
             raise PersistenceError(
@@ -40,8 +62,12 @@ class SupabasePqrsdRepository:
             "limit": "1",
         }
 
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            response = await client.get(url, headers=headers, params=params)
+        response = await self._request_with_retry(
+            "GET",
+            url,
+            headers=headers,
+            params=params,
+        )
 
         if response.status_code >= 400:
             raise PersistenceError(
@@ -66,8 +92,12 @@ class SupabasePqrsdRepository:
             "limit": str(limit),
         }
 
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            response = await client.get(url, headers=headers, params=params)
+        response = await self._request_with_retry(
+            "GET",
+            url,
+            headers=headers,
+            params=params,
+        )
 
         if response.status_code >= 400:
             raise PersistenceError(
@@ -92,8 +122,12 @@ class SupabasePqrsdRepository:
             "limit": "1",
         }
 
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            response = await client.get(url, headers=headers, params=params)
+        response = await self._request_with_retry(
+            "GET",
+            url,
+            headers=headers,
+            params=params,
+        )
 
         if response.status_code >= 400:
             raise PersistenceError(
@@ -118,10 +152,13 @@ class SupabasePqrsdRepository:
             "select": "*",
         }
 
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            response = await client.patch(
-                url, headers=headers, params=params, json=updates
-            )
+        response = await self._request_with_retry(
+            "PATCH",
+            url,
+            headers=headers,
+            params=params,
+            json=updates,
+        )
 
         if response.status_code >= 400:
             raise PersistenceError(

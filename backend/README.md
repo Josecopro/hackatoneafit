@@ -42,17 +42,16 @@ cp .env.example .env.local
 - `GET /health`
 - `POST /api/pqrsd/normal`
 - `POST /api/pqrsd/anonymous`
-<<<<<<< HEAD
+- `POST /api/admin/auth/login`
 
 ## Migraciones SQL
 
-El repositorio incluye una migracion idempotente para el modelo actual de `pqrsd_requests`:
+El repositorio incluye migraciones idempotentes para el modelo actual:
 
 - `backend/migrations/20260419_pqrsd_requests_admin_models.sql`
+- `backend/supabase/admin_auth_schema.sql`
 
-Como en este proyecto no hay Supabase CLI configurado, puedes ejecutarla desde el SQL Editor de Supabase.
-=======
-- `POST /api/admin/auth/login`
+Como en este proyecto no hay Supabase CLI configurado, puedes ejecutarlas desde el SQL Editor de Supabase.
 
 ## Auth de administradores (Etapa 2)
 
@@ -60,23 +59,22 @@ Como en este proyecto no hay Supabase CLI configurado, puedes ejecutarla desde e
 
 - `backend/supabase/admin_auth_schema.sql`
 
-2. Instala dependencias actualizadas (incluye `bcrypt`):
+1. Instala dependencias actualizadas (incluye `bcrypt`):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Genera un hash bcrypt para el password del administrador e insertalo en `admin_users`:
+1. Genera un hash bcrypt para el password del administrador e insertalo en `admin_users`:
 
 ```python
 import bcrypt
 print(bcrypt.hashpw(b"tu-password-seguro", bcrypt.gensalt()).decode())
 ```
 
-4. Inserta el administrador (email en minuscula):
+1. Inserta el administrador (email en minuscula):
 
 ```sql
 insert into public.admin_users (email, full_name, password_hash)
 values ('admin@medellin.gov.co', 'Administrador PQRSD', '$2b$12$...');
 ```
->>>>>>> 2ca1bd6 (added auth with supabase!)
