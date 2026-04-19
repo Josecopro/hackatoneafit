@@ -64,10 +64,11 @@ SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
 3. La persistencia ocurre en:
-	- `src/app/api/pqrsd/normal/route.ts`
-	- `src/app/api/pqrsd/anonymous/route.ts`
+   - `src/app/api/pqrsd/normal/route.ts`
+   - `src/app/api/pqrsd/anonymous/route.ts`
 
 Cada radicación guarda:
+
 - datos clave de búsqueda (tipo, asunto, estado, fechas)
 - metadatos de contacto y ubicación
 - `tracking_id` único
