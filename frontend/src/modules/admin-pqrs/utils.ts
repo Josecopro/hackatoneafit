@@ -19,6 +19,13 @@ type AdminPqrsDetail = AdminPqrsListItem & {
   borrador_respuesta: string;
   requiere_humano: boolean;
   razon_revision: string;
+  attachments?: Array<{
+    name?: string;
+    path?: string;
+    mimeType?: string;
+    size?: number;
+    url?: string;
+  }>;
 };
 
 type SendOfficialResponsePayload = {
@@ -54,6 +61,7 @@ function mapListItemToRecord(item: AdminPqrsListItem): PqrsRecord {
     businessDaysElapsed: item.business_days_elapsed,
     businessDaysLimit: item.business_days_limit,
     sentimentScore: item.sentimiento_score,
+    attachments: [],
   };
 }
 
@@ -89,12 +97,25 @@ export async function getPqrsById(id: string): Promise<PqrsRecord | null> {
 
   const item = (await response.json()) as AdminPqrsDetail;
   const base = mapListItemToRecord(item);
+  const attachments = Array.isArray(item.attachments)
+    ? item.attachments
+      .filter((file) => file && typeof file.path === 'string' && file.path.trim().length > 0)
+      .map((file) => ({
+        name: String(file.name || 'archivo'),
+        path: String(file.path),
+        mimeType: String(file.mimeType || 'application/octet-stream'),
+        size: Number(file.size || 0),
+        url: typeof file.url === 'string' ? file.url : undefined,
+      }))
+    : [];
+
   return {
     ...base,
     description: item.description,
     draftResponse: item.borrador_respuesta || '',
     requiresHumanReview: Boolean(item.requiere_humano),
     reviewReason: item.razon_revision || 'Borrador generado por IA; requiere validacion humana antes de envio.',
+    attachments,
   };
 }
 

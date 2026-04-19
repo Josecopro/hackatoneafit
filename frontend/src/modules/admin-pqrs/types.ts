@@ -2,6 +2,14 @@ export type PqrsPriority = 'Alta' | 'Media' | 'Baja';
 
 export type PqrsStatus = 'Radicada' | 'En revision' | 'Respondida';
 
+export interface PqrsAttachment {
+  name: string;
+  path: string;
+  mimeType: string;
+  size: number;
+  url?: string;
+}
+
 export interface PqrsRecord {
   id: string;
   ticket: string;
@@ -19,4 +27,5 @@ export interface PqrsRecord {
   businessDaysLimit: number;
   sentimentScore: number;
   lastResponseAt?: string;
+  attachments: PqrsAttachment[];
 }

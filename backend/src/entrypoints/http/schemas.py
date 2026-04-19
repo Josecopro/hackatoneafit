@@ -9,6 +9,7 @@ class AttachmentIn(BaseModel):
     name: str
     size: int
     mimeType: str
+    url: str | None = None
 
 
 class NormalPayloadIn(BaseModel):
@@ -173,3 +174,4 @@ class AdminPqrsDetail(BaseModel):
     business_days_elapsed: int
     business_days_limit: int
     sentimiento_score: float
+    attachments: list[AttachmentIn] = Field(default_factory=list)

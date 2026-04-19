@@ -258,6 +258,37 @@
   line-height: 1.5;
 }
 
+.adminViews__attachmentsSection {
+  margin-top: 1rem;
+}
+
+.adminViews__attachmentsTitle {
+  margin: 0;
+  color: var(--color-text-strong);
+}
+
+.adminViews__attachmentsList {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-left: 1rem;
+}
+
+.adminViews__attachmentLink {
+  color: var(--color-brand-800);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.adminViews__attachmentLink:hover {
+  color: var(--color-brand-900);
+}
+
+.adminViews__attachmentUnavailable {
+  color: var(--color-text-muted);
+}
+
 .adminViews__responseCard {
   padding: 1.25rem;
 }

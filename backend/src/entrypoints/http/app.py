@@ -342,7 +342,8 @@ def build_app() -> FastAPI:
             raise HTTPException(status_code=500, detail=str(exc)) from exc
 
         open_rows = [row for row in rows if not _is_resolved_record(row)]
-        items = [_build_admin_item(row) for row in open_rows]
+        rows_for_list = open_rows if open_rows else rows
+        items = [_build_admin_item(row) for row in rows_for_list]
         items.sort(
             key=lambda item: (
                 -item.business_days_elapsed,
@@ -428,6 +429,30 @@ def build_app() -> FastAPI:
                 pass
 
         item = _build_admin_item(row)
+        attachments_raw = row.get("attachments") if isinstance(row.get("attachments"), list) else []
+        attachments: list[dict] = []
+        for file in attachments_raw:
+            if not isinstance(file, dict):
+                continue
+
+            bucket = str(file.get("bucket") or settings.supabase_storage_bucket)
+            path = str(file.get("path") or "").strip()
+            if not path:
+                continue
+
+            attachments.append(
+                {
+                    "bucket": bucket,
+                    "path": path,
+                    "name": str(file.get("name") or "archivo"),
+                    "size": int(file.get("size") or 0),
+                    "mimeType": str(
+                        file.get("mimeType") or "application/octet-stream"
+                    ),
+                    "url": f"{settings.supabase_url.rstrip('/')}/storage/v1/object/public/{bucket}/{path}",
+                }
+            )
+
         return AdminPqrsDetail(
             id=item.id,
             ticket=item.ticket,
@@ -446,6 +471,7 @@ def build_app() -> FastAPI:
             business_days_elapsed=item.business_days_elapsed,
             business_days_limit=item.business_days_limit,
             sentimiento_score=item.sentimiento_score,
+            attachments=attachments,
         )
 
     @app.post(

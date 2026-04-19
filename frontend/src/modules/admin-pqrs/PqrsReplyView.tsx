@@ -105,6 +105,37 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
             <p className={styles.adminViews__infoRow}>
               <strong>Descripcion:</strong> {record.description}
             </p>
+
+            <div className={styles.adminViews__attachmentsSection}>
+              <p className={styles.adminViews__attachmentsTitle}>
+                <strong>Archivos adjuntos:</strong>
+              </p>
+              {record.attachments.length === 0 ? (
+                <p className={styles.adminViews__infoRow}>Esta PQRS no tiene archivos adjuntos.</p>
+              ) : (
+                <ul className={styles.adminViews__attachmentsList}>
+                  {record.attachments.map((file) => {
+                    const href = file.url || '#';
+                    return (
+                      <li key={file.path}>
+                        {file.url ? (
+                          <a
+                            className={styles.adminViews__attachmentLink}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {file.name}
+                          </a>
+                        ) : (
+                          <span className={styles.adminViews__attachmentUnavailable}>{file.name}</span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
           </article>
 
           <article className={`${styles.adminViews__card} ${styles.adminViews__responseCard}`}>
