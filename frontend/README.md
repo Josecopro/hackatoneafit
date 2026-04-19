@@ -15,9 +15,8 @@ Aplicación web de radicación PQRSD construida con Next.js (App Router), React,
 - `src/components/radicacion/EntryFlowSelector.tsx`: selector inicial de flujos.
 - `src/App.tsx`: formularios normal/anónimo y pasos de radicación.
 - `src/schema.ts`: validaciones Zod del cliente y servidor.
-- `supabase/pqrsd_schema.sql`: script SQL para crear tabla e índices de almacenamiento.
 
-## Comandos
+## Comandos para replicar de forma local (tener en cuenta todas las dependencias y correr el backend al igual que la db)
 
 Requisito: Node.js 18.18+ (recomendado 20+).
 
@@ -73,14 +72,6 @@ Guia para nuevas clases:
 2. Nombra cada parte interna como elemento con `__`.
 3. Evita nombres genericos (`container`, `title`, `card`) sin prefijo de bloque.
 
-## Supabase (persistencia de PQRSD)
-
-1. Crea la tabla ejecutando el script `supabase/pqrsd_schema.sql` en el SQL Editor de Supabase.
-2. Configura variables de entorno:
-
-```bash
-NEXT_PUBLIC_BACKEND_BASE_URL=https://hackatoneafit.onrender.com
-```
 
 `NEXT_PUBLIC_BACKEND_BASE_URL` es obligatorio para radicar solicitudes desde el navegador. La persistencia y carga de anexos ocurre exclusivamente en el backend desacoplado.
 
@@ -97,7 +88,5 @@ Flujo implementado:
 - `POST /api/admin/auth/login`: delega validacion de credenciales al backend y crea cookie de sesion `httpOnly` firmada.
 - `GET /api/admin/auth/logout`: elimina sesion y redirige al login administrativo.
 - `src/middleware.ts`: protege todas las rutas bajo `/administracion/*` excepto `/administracion/login`.
-
-Desde la etapa 2, los administradores viven en la tabla `admin_users` de Supabase y el frontend ya no lee correo/contrasena de variables de entorno.
 
 Cuando un usuario intenta abrir una ruta protegida sin sesion activa, se redirige a login con parametro `next` para regresar al destino luego de autenticarse.
