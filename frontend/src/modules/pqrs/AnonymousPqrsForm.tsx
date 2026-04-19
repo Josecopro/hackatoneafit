@@ -16,7 +16,6 @@ import {
   SuccessView,
   TextareaField,
 } from '@/components/forms/sharedFields';
-import { getBackendUrl } from '@/lib/backendUrl';
 import styles from '@/App.module.scss';
 
 const ENTRY_QUERY_PREFILL_STORAGE_KEY = 'pqrs_entry_query_prefill';
@@ -93,23 +92,27 @@ export default function AnonymousPqrsForm() {
         formData.append('attachments', file);
       });
 
-      const backendUrl = getBackendUrl();
       const res = await fetchWithTimeout(
-        `${backendUrl}/api/pqrsd/anonymous`,
+        '/api/pqrsd/anonymous',
         {
           method: 'POST',
           body: formData,
         },
         30000,
       );
-      const result = await res.json();
+      const result = await res.json().catch(() => ({}));
 
-      if (result.success) {
+      if (res.ok && result.success) {
         setTrackingId(result.trackingId);
         setStatus('success');
       } else {
         setStatus('idle');
-        setServerError(result.errors?.[0]?.message || 'Error de validación en el servidor');
+        const message =
+          result?.errors?.[0]?.message ||
+          result?.message ||
+          result?.detail ||
+          'Error de validacion en el servidor';
+        setServerError(message);
       }
     } catch (_error) {
       setStatus('idle');

@@ -55,7 +55,7 @@ Si `npm run lint` reporta errores en `.next/types/validator.ts`, revisa que cada
 2. Configura variables de entorno:
 
 ```bash
-NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_BACKEND_BASE_URL=https://hackatoneafit.onrender.com
 ```
 
 `NEXT_PUBLIC_BACKEND_BASE_URL` es obligatorio para radicar solicitudes desde el navegador. La persistencia y carga de anexos ocurre exclusivamente en el backend desacoplado.
@@ -72,7 +72,7 @@ Cada radicación guarda:
 Configura tambien estas variables en `frontend/.env.local` (o en la raiz si ejecutas con `run-dev.sh`):
 
 ```bash
-BACKEND_BASE_URL=http://localhost:8000
+BACKEND_BASE_URL=https://hackatoneafit.onrender.com
 ADMIN_AUTH_SECRET=change-this-secret-with-at-least-32-chars
 ```
 

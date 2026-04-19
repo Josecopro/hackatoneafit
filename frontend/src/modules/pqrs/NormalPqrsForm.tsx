@@ -17,7 +17,6 @@ import {
   SuccessView,
   TextareaField,
 } from '@/components/forms/sharedFields';
-import { getBackendUrl } from '@/lib/backendUrl';
 import styles from '@/App.module.scss';
 
 const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
@@ -151,23 +150,27 @@ export default function NormalPqrsForm() {
         formData.append('attachments', file);
       });
 
-      const backendUrl = getBackendUrl();
       const res = await fetchWithTimeout(
-        `${backendUrl}/api/pqrsd/normal`,
+        '/api/pqrsd/normal',
         {
           method: 'POST',
           body: formData,
         },
         30000,
       );
-      const result = await res.json();
+      const result = await res.json().catch(() => ({}));
 
-      if (result.success) {
+      if (res.ok && result.success) {
         setTrackingId(result.trackingId);
         setStatus('success');
       } else {
         setStatus('idle');
-        setServerError(result.errors?.[0]?.message || 'Error de validación en el servidor');
+        const message =
+          result?.errors?.[0]?.message ||
+          result?.message ||
+          result?.detail ||
+          'Error de validacion en el servidor';
+        setServerError(message);
       }
     } catch (_error) {
       setStatus('idle');
