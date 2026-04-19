@@ -158,7 +158,18 @@ def build_app() -> FastAPI:
                 status_code=404, detail="No hay PQRS registradas para procesar."
             )
 
-        state = run_minimal_agent_flow(latest)
+        try:
+            state = run_minimal_agent_flow(latest)
+        except RuntimeError as exc:
+            detail = str(exc)
+            lowered = detail.lower()
+            if "rate-limited" in lowered:
+                status_code = 503
+            elif "could not find configured models" in lowered or "model not found" in lowered:
+                status_code = 400
+            else:
+                status_code = 400
+            raise HTTPException(status_code=status_code, detail=detail) from exc
 
         original_payload = (
             latest.get("payload") if isinstance(latest.get("payload"), dict) else {}

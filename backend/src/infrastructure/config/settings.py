@@ -13,6 +13,9 @@ class Settings:
         self.cors_allowed_origins = self._parse_origins(
             os.getenv("CORS_ALLOWED_ORIGINS")
         )
+        self.groq_api_key = os.getenv("GROQ_API_KEY") or ""
+        self.groq_model = os.getenv("GROQ_MODEL") or "llama-3.1-8b-instant"
+        self.groq_fallback_models = self._parse_csv(os.getenv("GROQ_FALLBACK_MODELS"))
 
     def validate(self) -> None:
         if not self.supabase_url:
@@ -33,3 +36,9 @@ class Settings:
             "http://localhost:3000",
             "http://127.0.0.1:3000",
         ]
+
+    @staticmethod
+    def _parse_csv(raw_value: str | None) -> list[str]:
+        if not raw_value:
+            return []
+        return [value.strip() for value in raw_value.split(",") if value.strip()]

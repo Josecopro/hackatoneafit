@@ -27,6 +27,9 @@ uvicorn main:app --reload --port 8000
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_STORAGE_BUCKET` (opcional, por defecto `pqrsd-attachments`)
 - `CORS_ALLOWED_ORIGINS` (opcional, CSV de orígenes permitidos)
+- `GROQ_API_KEY` (requerida para el flujo de agentes con LLM)
+- `GROQ_MODEL` (opcional, por defecto `llama-3.1-8b-instant`)
+- `GROQ_FALLBACK_MODELS` (opcional, CSV de modelos de respaldo)
 
 Puedes crear el archivo local con:
 
