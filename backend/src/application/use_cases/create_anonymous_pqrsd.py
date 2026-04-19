@@ -7,7 +7,9 @@ class CreateAnonymousPqrsdUseCase:
     def __init__(self, repository: PqrsdRepository) -> None:
         self._repository = repository
 
-    async def execute(self, *, tracking_id: str, payload: dict, attachments: list[dict]) -> None:
+    async def execute(
+        self, *, tracking_id: str, payload: dict, attachments: list[dict]
+    ) -> None:
         record = {
             "tracking_id": tracking_id,
             "request_type": "anonymous",

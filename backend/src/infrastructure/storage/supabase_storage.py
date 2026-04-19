@@ -16,7 +16,9 @@ class SupabaseStorageError(Exception):
 
 
 class SupabaseStorageClient:
-    def __init__(self, *, supabase_url: str, service_role_key: str, bucket_name: str) -> None:
+    def __init__(
+        self, *, supabase_url: str, service_role_key: str, bucket_name: str
+    ) -> None:
         self._base_url = supabase_url.rstrip("/")
         self._service_role_key = service_role_key
         self._bucket_name = bucket_name
@@ -29,7 +31,9 @@ class SupabaseStorageClient:
         files: list[dict[str, Any]],
     ) -> list[dict[str, Any]]:
         if len(files) > MAX_FILES:
-            raise SupabaseStorageError(f"Solo se permiten hasta {MAX_FILES} archivos adjuntos.")
+            raise SupabaseStorageError(
+                f"Solo se permiten hasta {MAX_FILES} archivos adjuntos."
+            )
 
         uploaded: list[dict[str, Any]] = []
         for index, file in enumerate(files):
@@ -39,14 +43,20 @@ class SupabaseStorageClient:
             size = len(content)
 
             if size > MAX_FILE_SIZE_BYTES:
-                raise SupabaseStorageError(f"El archivo {file_name} supera el limite de 10 MB.")
+                raise SupabaseStorageError(
+                    f"El archivo {file_name} supera el limite de 10 MB."
+                )
 
             extension = _get_file_extension(file_name)
-            base_name = _sanitize_file_name(file_name.rsplit(".", 1)[0] if "." in file_name else file_name)
+            base_name = _sanitize_file_name(
+                file_name.rsplit(".", 1)[0] if "." in file_name else file_name
+            )
             normalized_file_name = f"{index + 1:02d}-{base_name}{extension}"
             path = f"{request_type}/{tracking_id}/{normalized_file_name}"
 
-            upload_url = f"{self._base_url}/storage/v1/object/{self._bucket_name}/{path}"
+            upload_url = (
+                f"{self._base_url}/storage/v1/object/{self._bucket_name}/{path}"
+            )
             headers = {
                 "apikey": self._service_role_key,
                 "Authorization": f"Bearer {self._service_role_key}",
@@ -55,11 +65,15 @@ class SupabaseStorageClient:
             }
 
             async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.post(upload_url, headers=headers, content=content)
+                response = await client.post(
+                    upload_url, headers=headers, content=content
+                )
 
             if response.status_code >= 400:
                 await self.remove_attachments(uploaded)
-                raise SupabaseStorageError(f"No fue posible subir el archivo {file_name}.")
+                raise SupabaseStorageError(
+                    f"No fue posible subir el archivo {file_name}."
+                )
 
             uploaded.append(
                 {

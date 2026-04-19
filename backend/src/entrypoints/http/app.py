@@ -14,8 +14,13 @@ from src.entrypoints.http.schemas import (
     NormalPayloadIn,
 )
 from src.infrastructure.config.settings import Settings
-from src.infrastructure.repositories.supabase_pqrsd_repository import SupabasePqrsdRepository
-from src.infrastructure.storage.supabase_storage import SupabaseStorageClient, SupabaseStorageError
+from src.infrastructure.repositories.supabase_pqrsd_repository import (
+    SupabasePqrsdRepository,
+)
+from src.infrastructure.storage.supabase_storage import (
+    SupabaseStorageClient,
+    SupabaseStorageError,
+)
 
 
 def build_app() -> FastAPI:
