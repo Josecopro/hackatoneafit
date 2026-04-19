@@ -75,3 +75,31 @@ class CreateResponse(BaseModel):
     success: bool
     message: str
     trackingId: str
+
+
+class AgentFlowSummary(BaseModel):
+    request_id: str
+    tracking_id: str
+    departamento: str
+    estado: str
+    es_competencia_secretaria: bool
+    motivo_no_competencia: str
+    detalle_competencia: str
+    sentimiento_label: str
+    sentimiento_score: float
+    tipo_peticion: str
+    dias_limite_ley_1755: int
+    fecha_limite_respuesta: str
+    requiere_humano: bool
+    razon_revision: str
+    borrador_respuesta: str
+    fragmento_competente: str
+    fuera_competencia: list[str] = Field(default_factory=list)
+    normativas_halladas: list[dict] = Field(default_factory=list)
+    fuentes_gov_permitidas: list[str] = Field(default_factory=list)
+
+
+class AgentFlowRunResponse(BaseModel):
+    success: bool
+    message: str
+    data: AgentFlowSummary
