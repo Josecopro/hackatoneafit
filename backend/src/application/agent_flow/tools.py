@@ -55,9 +55,7 @@ OUT_SCOPE_TOPICS = {
 }
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
-PHONE_RE = re.compile(
-    r"\b(?:\+?57\s*)?(?:3\d{2}|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}\b"
-)
+PHONE_RE = re.compile(r"\b(?:\+?57\s*)?(?:3\d{2}|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}\b")
 LONG_ID_RE = re.compile(r"\b\d{7,12}\b")
 DOC_RE = re.compile(
     r"\b(?:cc|cedula|c[ée]dula|nit|documento|doc)\s*[:#-]?\s*\d{5,}\b",
@@ -269,7 +267,5 @@ def add_business_days(start_date: date, business_days: int) -> date:
 
 
 def extract_normative_mentions(text: str) -> list[str]:
-    pattern = re.compile(
-        r"(Ley\s+\d+|Decreto\s+\d+|Artículo\s+\d+)", re.IGNORECASE
-    )
+    pattern = re.compile(r"(Ley\s+\d+|Decreto\s+\d+|Artículo\s+\d+)", re.IGNORECASE)
     return pattern.findall(text)

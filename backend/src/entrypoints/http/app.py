@@ -165,7 +165,10 @@ def build_app() -> FastAPI:
             lowered = detail.lower()
             if "rate-limited" in lowered:
                 status_code = 503
-            elif "could not find configured models" in lowered or "model not found" in lowered:
+            elif (
+                "could not find configured models" in lowered
+                or "model not found" in lowered
+            ):
                 status_code = 400
             else:
                 status_code = 400

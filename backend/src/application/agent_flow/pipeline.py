@@ -134,9 +134,7 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
             state.fragmento_competente = det_fragment
             state.fuera_competencia = det_outside
 
-        state.detalle_competencia = (
-            f"LLM: {triage.detalle_competencia} | Deterministic: {deterministic_signal['summary']}"
-        )
+        state.detalle_competencia = f"LLM: {triage.detalle_competencia} | Deterministic: {deterministic_signal['summary']}"
         state.sentimiento_label = triage.sentimiento_label
         state.sentimiento_score = triage.sentimiento_score
         state.tipo_peticion = triage.tipo_peticion
@@ -150,7 +148,9 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
         triage_error = str(exc)
         state.es_competencia_secretaria = bool(det_belongs)
         state.departamento = (
-            "DesarrolloEconomico" if state.es_competencia_secretaria else "NoCompetenciaSDE"
+            "DesarrolloEconomico"
+            if state.es_competencia_secretaria
+            else "NoCompetenciaSDE"
         )
         state.fragmento_competente = det_fragment
         state.fuera_competencia = det_outside
@@ -185,7 +185,9 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
                 f"{state.motivo_no_competencia} Soporte determinista: {det_reason}"
             )
         out_topics = summarize_out_of_scope_topics(state.texto_original)
-        topics_line = ", ".join(out_topics) if out_topics else "dependencias competentes"
+        topics_line = (
+            ", ".join(out_topics) if out_topics else "dependencias competentes"
+        )
         state.borrador_respuesta = (
             f"Ciudadano/a - Radicado {state.tracking_id or state.request_id} - Fecha {state.created_at or datetime.utcnow().date().isoformat()}\n\n"
             "Recibimos su comunicacion y comprendemos la importancia de su situacion.\n\n"
@@ -199,7 +201,9 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
         state.normativas_halladas = []
         state.respuestas_oro_halladas = []
         state.sin_contexto_legal = True
-        state.razon_revision = "Requiere verificacion humana del traslado a dependencias competentes."
+        state.razon_revision = (
+            "Requiere verificacion humana del traslado a dependencias competentes."
+        )
         state.ciclos_correccion = 0
         state.fragmento_competente = sanitize_personal_data(state.fragmento_competente)
         state.fuera_competencia = sanitize_personal_data_list(state.fuera_competencia)
@@ -219,15 +223,14 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
 
     # Agent 3: LLM drafting
     legal_context_text = "\n".join(
-        [
-            f"- {item['source']}: {item['snippet']}"
-            for item in state.normativas_halladas
-        ]
+        [f"- {item['source']}: {item['snippet']}" for item in state.normativas_halladas]
     )
     try:
         draft = run_llm_drafter(
             citizen_text=state.fragmento_competente or state.texto_original,
-            out_of_scope_text="\n".join(state.fuera_competencia) if state.fuera_competencia else "",
+            out_of_scope_text=(
+                "\n".join(state.fuera_competencia) if state.fuera_competencia else ""
+            ),
             tracking_id=state.tracking_id or state.request_id,
             created_at=state.created_at or datetime.utcnow().date().isoformat(),
             sentimiento_label=state.sentimiento_label,
@@ -240,7 +243,9 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
 
         if _looks_like_payload_instead_of_letter(draft.borrador_respuesta):
             out_topics = summarize_out_of_scope_topics(state.texto_original)
-            topics_line = ", ".join(out_topics) if out_topics else "dependencias competentes"
+            topics_line = (
+                ", ".join(out_topics) if out_topics else "dependencias competentes"
+            )
             state.borrador_respuesta = (
                 f"Ciudadano/a - Radicado {state.tracking_id or state.request_id} - Fecha {state.created_at or datetime.utcnow().date().isoformat()}\n\n"
                 "Reconocemos la importancia de su solicitud y la necesidad de una atencion clara y oportuna.\n\n"
@@ -253,16 +258,16 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
                 "Alcaldia de Medellin"
             )
             state.requiere_humano = True
-            state.razon_revision = (
-                "LLM draft returned non-letter payload format; human legal review required."
-            )
+            state.razon_revision = "LLM draft returned non-letter payload format; human legal review required."
         else:
             state.borrador_respuesta = draft.borrador_respuesta
             state.requiere_humano = draft.requiere_humano
             state.razon_revision = draft.razon_revision
     except RuntimeError as exc:
         out_topics = summarize_out_of_scope_topics(state.texto_original)
-        topics_line = ", ".join(out_topics) if out_topics else "dependencias competentes"
+        topics_line = (
+            ", ".join(out_topics) if out_topics else "dependencias competentes"
+        )
         state.borrador_respuesta = (
             f"Ciudadano/a - Radicado {state.tracking_id or state.request_id} - Fecha {state.created_at or datetime.utcnow().date().isoformat()}\n\n"
             "Comprendemos la relevancia de su solicitud y ofrecemos disculpas por la demora asociada a una contingencia tecnica temporal.\n\n"
@@ -274,8 +279,7 @@ def run_minimal_agent_flow(request_record: dict) -> AgentState:
         )
         state.requiere_humano = True
         state.razon_revision = (
-            "LLM drafting unavailable; human legal review required. "
-            f"Reason: {exc}"
+            "LLM drafting unavailable; human legal review required. " f"Reason: {exc}"
         )
 
     state.ciclos_correccion = 1

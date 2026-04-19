@@ -15,9 +15,7 @@ class LlmTriageResult(BaseModel):
     detalle_competencia: str = Field(
         description="Clear explanation of why it is in scope or out of scope."
     )
-    motivo_no_competencia: str = Field(
-        description="Non-empty only when out of scope."
-    )
+    motivo_no_competencia: str = Field(description="Non-empty only when out of scope.")
     fragmento_competente: str = Field(
         description="Only the in-scope fragment for Secretaria de Desarrollo Economico."
     )
@@ -36,12 +34,8 @@ class LlmTriageResult(BaseModel):
     departamento: str = Field(
         description="Likely office. Use 'DesarrolloEconomico' if in scope, otherwise best external office label."
     )
-    sentimiento_label: str = Field(
-        description="One of: negativo, neutro, positivo"
-    )
-    sentimiento_score: float = Field(
-        description="From -1.0 to 1.0"
-    )
+    sentimiento_label: str = Field(description="One of: negativo, neutro, positivo")
+    sentimiento_score: float = Field(description="From -1.0 to 1.0")
     tipo_peticion: str = Field(
         description="One of: informacion_documentos, consulta, peticion_general"
     )
@@ -125,7 +119,9 @@ def _extract_json_payload(text: str) -> str:
     return payload
 
 
-def _invoke_with_fallback(prompt: ChatPromptTemplate, schema: type[BaseModel], variables: dict):
+def _invoke_with_fallback(
+    prompt: ChatPromptTemplate, schema: type[BaseModel], variables: dict
+):
     settings = Settings()
     models = _candidate_models(settings)
     rate_limit_errors: list[str] = []
@@ -142,9 +138,13 @@ def _invoke_with_fallback(prompt: ChatPromptTemplate, schema: type[BaseModel], v
             # Prefer native structured output so provider enforces schema.
             return structured_chain.invoke(variables)
         except ValidationError as exc:
-            parse_errors.append(f"{model_name}: structured output validation error: {exc}")
+            parse_errors.append(
+                f"{model_name}: structured output validation error: {exc}"
+            )
             # Try manual extraction fallback below in case provider ignored schema contract.
-        except Exception as exc:  # noqa: BLE001 - provider-specific exceptions vary by SDK.
+        except (
+            Exception
+        ) as exc:  # noqa: BLE001 - provider-specific exceptions vary by SDK.
             detail = str(exc).lower()
             if _is_rate_limited(detail):
                 rate_limit_errors.append(f"{model_name}: {exc}")
@@ -160,13 +160,17 @@ def _invoke_with_fallback(prompt: ChatPromptTemplate, schema: type[BaseModel], v
 
         try:
             response = chain.invoke(variables)
-            content = response.content if hasattr(response, "content") else str(response)
+            content = (
+                response.content if hasattr(response, "content") else str(response)
+            )
             json_payload = _extract_json_payload(str(content))
             return schema.model_validate_json(json_payload)
         except ValidationError as exc:
             parse_errors.append(f"{model_name}: manual json parse error: {exc}")
             continue
-        except Exception as exc:  # noqa: BLE001 - provider-specific exceptions vary by SDK.
+        except (
+            Exception
+        ) as exc:  # noqa: BLE001 - provider-specific exceptions vary by SDK.
             detail = str(exc).lower()
             if _is_rate_limited(detail):
                 rate_limit_errors.append(f"{model_name}: {exc}")
