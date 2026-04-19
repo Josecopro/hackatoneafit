@@ -5,7 +5,7 @@ import {
   getAdminSessionTtlSeconds,
   isAdminSessionConfigured,
 } from '@/lib/adminAuth';
-import { validateAdminLoginWithBackend } from '@/lib/backendPqrsdClient';
+import { BackendClientError, validateAdminLoginWithBackend } from '@/lib/backendPqrsdClient';
 
 type LoginBody = {
   email?: string;
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     await validateAdminLoginWithBackend({ email, password });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'No fue posible validar credenciales.';
-    const status = message === 'Credenciales invalidas.' ? 401 : 503;
+    const status = error instanceof BackendClientError ? error.status : 503;
 
     return NextResponse.json(
       {

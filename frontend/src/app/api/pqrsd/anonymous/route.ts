@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { submitPqrsdToBackend } from '@/lib/backendPqrsdClient';
+import { BackendClientError, submitPqrsdToBackend } from '@/lib/backendPqrsdClient';
 
 export async function POST(request: Request) {
   let formData: FormData;
@@ -26,13 +26,14 @@ export async function POST(request: Request) {
     return NextResponse.json(result, { status: 200 });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'No fue posible radicar la solicitud.';
+    const status = error instanceof BackendClientError ? error.status : 503;
 
     return NextResponse.json(
       {
         success: false,
         errors: [{ message }],
       },
-      { status: 503 },
+      { status },
     );
   }
 }

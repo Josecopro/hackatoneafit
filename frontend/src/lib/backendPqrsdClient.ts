@@ -1,5 +1,15 @@
 type PersistMode = 'normal' | 'anonymous';
 
+export class BackendClientError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+  ) {
+    super(message);
+    this.name = 'BackendClientError';
+  }
+}
+
 function getBackendBaseUrl(): string {
   return (process.env.BACKEND_BASE_URL || process.env.NEXT_PUBLIC_BACKEND_BASE_URL || '')
     .trim()
@@ -38,7 +48,10 @@ export async function validateAdminLoginWithBackend(params: {
 
   if (!response.ok) {
     const detail = typeof responseBody?.detail === 'string' ? responseBody.detail : null;
-    throw new Error(detail || 'No fue posible validar el acceso administrativo en backend.');
+    throw new BackendClientError(
+      detail || 'No fue posible validar el acceso administrativo en backend.',
+      response.status,
+    );
   }
 
   return responseBody;
@@ -62,11 +75,14 @@ export async function submitPqrsdToBackend(params: {
     cache: 'no-store',
   });
 
-   const responseBody = await response.json().catch(() => ({}));
+  const responseBody = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     const detail = typeof responseBody?.detail === 'string' ? responseBody.detail : null;
-    throw new Error(detail || 'No fue posible persistir en el backend desacoplado.');
+    throw new BackendClientError(
+      detail || 'No fue posible persistir en el backend desacoplado.',
+      response.status,
+    );
   }
 
   return responseBody;
