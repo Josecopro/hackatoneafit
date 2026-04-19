@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.application.use_cases.create_anonymous_pqrsd import CreateAnonymousPqrsdUseCase
 from src.application.use_cases.create_normal_pqrsd import CreateNormalPqrsdUseCase
@@ -40,6 +41,14 @@ def build_app() -> FastAPI:
     create_anonymous = CreateAnonymousPqrsdUseCase(repository)
 
     app = FastAPI(title="PQRSD Backend", version="0.1.0")
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @app.get("/health")
     async def health() -> dict:

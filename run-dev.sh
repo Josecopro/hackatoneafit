@@ -59,10 +59,10 @@ echo "[info] Iniciando backend en :$BACKEND_PORT"
 ) &
 BACK_PID=$!
 
-echo "[info] Iniciando frontend en :$FRONTEND_PORT (BACKEND_BASE_URL=http://localhost:$BACKEND_PORT)"
+echo "[info] Iniciando frontend en :$FRONTEND_PORT (NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:$BACKEND_PORT)"
 (
   cd "$ROOT_DIR/frontend"
-  BACKEND_BASE_URL="http://localhost:$BACKEND_PORT" npm run dev -- -p "$FRONTEND_PORT"
+  NEXT_PUBLIC_BACKEND_BASE_URL="http://localhost:$BACKEND_PORT" npm run dev -- -p "$FRONTEND_PORT"
 ) &
 FRONT_PID=$!
 

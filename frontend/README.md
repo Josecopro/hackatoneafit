@@ -15,10 +15,7 @@ Aplicación web de radicación PQRSD construida con Next.js (App Router), React,
 - `src/components/radicacion/EntryFlowSelector.tsx`: selector inicial de flujos.
 - `src/App.tsx`: formularios normal/anónimo y pasos de radicación.
 - `src/schema.ts`: validaciones Zod del cliente y servidor.
-- `src/app/api/pqrsd/normal/route.ts`: endpoint para radicación normal.
-- `src/app/api/pqrsd/anonymous/route.ts`: endpoint para radicación anónima.
 - `supabase/pqrsd_schema.sql`: script SQL para crear tabla e índices de almacenamiento.
-- `src/lib/backendPqrsdClient.ts`: cliente BFF para delegar solicitudes al backend.
 
 ## Comandos
 
@@ -58,16 +55,10 @@ Si `npm run lint` reporta errores en `.next/types/validator.ts`, revisa que cada
 2. Configura variables de entorno:
 
 ```bash
-BACKEND_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:8000
 ```
 
-`BACKEND_BASE_URL` es obligatorio para radicar solicitudes. Las rutas de Next delegan toda la lógica de persistencia y anexos al backend desacoplado.
-
-3. La persistencia ocurre en:
-   - `src/app/api/pqrsd/normal/route.ts`
-   - `src/app/api/pqrsd/anonymous/route.ts`
-
-Estas rutas actúan como BFF y delegan persistencia exclusivamente al backend.
+`NEXT_PUBLIC_BACKEND_BASE_URL` es obligatorio para radicar solicitudes desde el navegador. La persistencia y carga de anexos ocurre exclusivamente en el backend desacoplado.
 
 Cada radicación guarda:
 

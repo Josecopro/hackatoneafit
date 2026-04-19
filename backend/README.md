@@ -26,6 +26,7 @@ uvicorn main:app --reload --port 8000
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_STORAGE_BUCKET` (opcional, por defecto `pqrsd-attachments`)
+- `CORS_ALLOWED_ORIGINS` (opcional, CSV de orígenes permitidos)
 
 Puedes crear el archivo local con:
 

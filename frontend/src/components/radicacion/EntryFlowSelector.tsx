@@ -23,6 +23,7 @@ export default function EntryFlowSelector() {
   const router = useRouter();
   const [showNormalReqForm, setShowNormalReqForm] = useState(false);
   const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+  const [entryError, setEntryError] = useState('');
 
   useEffect(() => {
     try {
@@ -160,14 +161,28 @@ export default function EntryFlowSelector() {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  const formData = new FormData(event.currentTarget);
+                  setEntryError('');
+
+                  const form = event.currentTarget;
+                  const formData = new FormData(form);
+
+                  const docType = String(formData.get('entry_doc_type') || '').trim();
+                  const docNumber = String(formData.get('entry_doc_number') || '').trim();
+                  const email = String(formData.get('entry_email') || '').trim();
+                  const confirmEmail = String(formData.get('entry_confirm_email') || '').trim();
+                  const acceptPolicy = formData.get('entry_accept_policy') === 'on';
+
+                  if (email !== confirmEmail) {
+                    setEntryError('Los correos no coinciden. Verifica e intenta nuevamente.');
+                    return;
+                  }
 
                   saveNormalPrefill({
-                    doc_type: String(formData.get('entry_doc_type') || ''),
-                    doc_number: String(formData.get('entry_doc_number') || ''),
-                    email: String(formData.get('entry_email') || ''),
-                    confirm_email: String(formData.get('entry_confirm_email') || ''),
-                    accept_policy: formData.get('entry_accept_policy') === 'on',
+                    doc_type: docType,
+                    doc_number: docNumber,
+                    email,
+                    confirm_email: confirmEmail,
+                    accept_policy: acceptPolicy,
                   });
 
                   goToNormalFlow();
@@ -236,6 +251,8 @@ export default function EntryFlowSelector() {
                     </span>
                   </label>
                 </div>
+
+                {entryError && <p className={styles.formError}>{entryError}</p>}
 
                 <div className={styles.actions}>
                   <button

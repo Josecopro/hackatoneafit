@@ -18,5 +18,6 @@ Variables utiles:
 
 - `BACKEND_PORT` para cambiar puerto del backend
 - `FRONTEND_PORT` para cambiar puerto del frontend
-- `SUPABASE_URL` o `NEXT_PUBLIC_SUPABASE_URL`
+- `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_BACKEND_BASE_URL`
