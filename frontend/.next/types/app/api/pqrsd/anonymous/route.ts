@@ -1,8 +1,8 @@
-// File: /home/josecoprolovespenguins/Projects/Eafit/frontend/app/api/pqrsd/anonymous/route.ts
-import * as entry from '../../../../../../app/api/pqrsd/anonymous/route.js'
+// File: /home/josecoprolovespenguins/Projects/Eafit/frontend/src/app/api/pqrsd/anonymous/route.ts
+import * as entry from '../../../../../../src/app/api/pqrsd/anonymous/route.js'
 import type { NextRequest } from 'next/server.js'
 
-type TEntry = typeof import('../../../../../../app/api/pqrsd/anonymous/route.js')
+type TEntry = typeof import('../../../../../../src/app/api/pqrsd/anonymous/route.js')
 
 type SegmentParams<T extends Object = any> = T extends Record<string, any>
   ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }

@@ -24,6 +24,7 @@ import {
   SuccessView,
   TextareaField,
 } from './components/forms/sharedFields';
+import HeroSection from './components/radicacion/HeroSection';
 import styles from './App.module.scss';
 
 type ViewMode = 'normal' | 'anon';
@@ -124,6 +125,10 @@ const NormalPQRSD = () => {
     }
   };
 
+  const onInvalidSubmit = () => {
+    setServerError('Hay campos obligatorios pendientes o con errores en el formulario.');
+  };
+
   if (status === 'success') {
     return (
       <SuccessView
@@ -140,7 +145,7 @@ const NormalPQRSD = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={`${styles.form} ${styles.fadeIn}`} noValidate>
+    <form onSubmit={handleSubmit(onSubmit, onInvalidSubmit)} className={`${styles.form} ${styles.fadeIn}`} noValidate>
       {status === 'submitting' && (
         <div className={styles.overlay} aria-live="polite" aria-busy="true">
           <div className={styles.overlayCard}>
@@ -201,6 +206,24 @@ const NormalPQRSD = () => {
           />
 
           <InputField
+            label="Correo electrónico"
+            id="email"
+            type="email"
+            placeholder="correo@ejemplo.com"
+            error={errors.email}
+            {...register('email')}
+          />
+
+          <InputField
+            label="Confirmar correo electrónico"
+            id="confirm_email"
+            type="email"
+            placeholder="Repita su correo"
+            error={errors.confirm_email}
+            {...register('confirm_email')}
+          />
+
+          <InputField
             label="Género"
             id="gender"
             type="select"
@@ -256,6 +279,17 @@ const NormalPQRSD = () => {
         </div>
 
         <div className={styles.verificationBox}>
+          <label className={styles.checkboxCard}>
+            <input type="checkbox" {...register('accept_policy')} className={styles.checkbox} />
+            <span className={styles.verificationText}>
+              Acepto la política de tratamiento de datos.{' '}
+              <Link href="/politica-tratamiento-datos" target="_blank" rel="noopener noreferrer">
+                Ver política
+              </Link>
+            </span>
+          </label>
+          {errors.accept_policy && <p className={styles.errorText}>{String(errors.accept_policy.message)}</p>}
+
           <label className={styles.checkboxCard}>
             <input type="checkbox" {...register('verification_check')} className={styles.checkbox} />
             <span className={styles.verificationText}>Campo de verificación</span>
@@ -525,33 +559,7 @@ export default function App({ initialView = 'normal', allowSwitch = true }: AppP
         Saltar al contenido principal
       </a>
 
-
-      <section className={styles.hero}>
-        <div className={styles.heroOverlay}>
-          <div className={styles.orbA} />
-          <div className={styles.orbB} />
-          <div className={`${styles.gridPattern} hero-grid-pattern`} />
-        </div>
-
-        <div className={styles.heroInner}>
-          <div className={styles.heroBadge}>
-            <span className={styles.heroDot} /> Plataforma oficial distrital
-          </div>
-          <div className={styles.heroGrid}>
-            <div>
-              <h2 className={styles.heroTitle}>{heroTitle}</h2>
-              <p className={styles.heroDescription}>{heroDescription}</p>
-            </div>
-            <div className={styles.heroCard}>
-              <p className={styles.heroCardTag}>Canal ciudadano</p>
-              <p className={styles.heroCardTitle}>Atención 24/7</p>
-              <p className={styles.heroCardText}>
-                Su número de radicado queda disponible al finalizar el formulario.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection heroTitle={heroTitle} heroDescription={heroDescription} />
 
       <main id="main-content" className={styles.main}>
         {allowSwitch ? (
