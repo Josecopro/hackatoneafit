@@ -4,17 +4,18 @@ import PqrsReplyView from '@/modules/admin-pqrs/PqrsReplyView';
 import { getPqrsById } from '@/modules/admin-pqrs/utils';
 
 type AdminPqrsReplyPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
   title: 'Administracion PQRSD - Responder',
 };
 
-export default function AdminPqrsReplyPage({ params }: AdminPqrsReplyPageProps) {
-  const record = getPqrsById(params.id);
+export default async function AdminPqrsReplyPage({ params }: AdminPqrsReplyPageProps) {
+  const { id } = await params;
+  const record = getPqrsById(id);
 
   if (!record) {
     notFound();

@@ -8,6 +8,16 @@ import { useState } from 'react';
 import { InputField, StepCard } from '@/components/forms/sharedFields';
 import styles from './EntryFlowSelector.module.scss';
 
+const NORMAL_PREFILL_STORAGE_KEY = 'pqrs_normal_prefill';
+
+type NormalEntryPrefill = {
+  doc_type: string;
+  doc_number: string;
+  email: string;
+  confirm_email: string;
+  accept_policy: boolean;
+};
+
 export default function EntryFlowSelector() {
   const router = useRouter();
   const [showNormalReqForm, setShowNormalReqForm] = useState(false);
@@ -18,6 +28,14 @@ export default function EntryFlowSelector() {
 
   const goToNormalFlow = () => {
     router.push('/radicacion/normal');
+  };
+
+  const saveNormalPrefill = (payload: NormalEntryPrefill) => {
+    try {
+      sessionStorage.setItem(NORMAL_PREFILL_STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Ignore storage write errors and continue to keep navigation functional.
+    }
   };
 
   const openNormalReqForm = () => {
@@ -75,12 +93,22 @@ export default function EntryFlowSelector() {
           <div className={`${styles.reqFormWrap} animate-fade-in`}>
             <StepCard
               stepNumber="1"
-              title="REQ persona normal (no anonima)"
+              title="REQ persona normal"
               subtitle="Para iniciar el requisito diligencie identificación, correo y aceptación de política"
             >
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
+                  const formData = new FormData(event.currentTarget);
+
+                  saveNormalPrefill({
+                    doc_type: String(formData.get('entry_doc_type') || ''),
+                    doc_number: String(formData.get('entry_doc_number') || ''),
+                    email: String(formData.get('entry_email') || ''),
+                    confirm_email: String(formData.get('entry_confirm_email') || ''),
+                    accept_policy: formData.get('entry_accept_policy') === 'on',
+                  });
+
                   goToNormalFlow();
                 }}
                 className={styles.reqForm}
@@ -134,7 +162,7 @@ export default function EntryFlowSelector() {
                       className={styles.policyCheckbox}
                     />
                     <span className={styles.policyText}>
-                      Acepto los términos, condiciones y políticas de privacidad.
+                      Acepto los términos, condiciones y políticas de privacidad de la
                       {' '}
                       <Link
                         href="/politica-tratamiento-datos"
@@ -142,7 +170,7 @@ export default function EntryFlowSelector() {
                         rel="noopener noreferrer"
                         className={styles.policyLink}
                       >
-                        Abrir política de tratamiento de datos
+                      política de tratamiento de datos
                       </Link>
                     </span>
                   </label>
