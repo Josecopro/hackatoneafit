@@ -51,17 +51,17 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
 
   if (isSubmitted) {
     return (
-      <main className={styles.shell}>
-        <div className={styles.container}>
-          <section className={`${styles.card} ${styles.loginCard}`}>
-            <h1 className={styles.title}>Respuesta enviada</h1>
-            <p className={styles.subtitle}>
+      <main className={styles.adminViews__shell}>
+        <div className={styles.adminViews__container}>
+          <section className={`${styles.adminViews__card} ${styles.adminViews__loginCard}`}>
+            <h1 className={styles.adminViews__title}>Respuesta enviada</h1>
+            <p className={styles.adminViews__subtitle}>
               La respuesta oficial del radicado {record.ticket} fue enviada correctamente al correo registrado del ciudadano.
             </p>
-            <p className={styles.helperText}>Seras redirigido al listado en unos segundos...</p>
-            <div className={styles.actions}>
+            <p className={styles.adminViews__helperText}>Seras redirigido al listado en unos segundos...</p>
+            <div className={styles.adminViews__actions}>
               <button
-                className={styles.primaryButton}
+                className={styles.adminViews__primaryButton}
                 type="button"
                 onClick={() => router.push('/administracion/pqrs')}
               >
@@ -75,44 +75,44 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
   }
 
   return (
-    <main className={styles.shell}>
-      <div className={styles.container}>
-        <div className={styles.topBar}>
-          <span className={styles.brand}>Administracion PQRSD</span>
-          <Link className={styles.topLink} href="/administracion/pqrs">
+    <main className={styles.adminViews__shell}>
+      <div className={styles.adminViews__container}>
+        <div className={styles.adminViews__topBar}>
+          <span className={styles.adminViews__brand}>Administracion PQRSD</span>
+          <Link className={styles.adminViews__topLink} href="/administracion/pqrs">
             Volver al listado
           </Link>
         </div>
 
-        <section className={styles.replyGrid}>
-          <article className={`${styles.card} ${styles.infoCard}`}>
-            <h1 className={styles.infoTitle}>Detalle de la PQRSD</h1>
-            <p className={styles.infoRow}>
+        <section className={styles.adminViews__replyGrid}>
+          <article className={`${styles.adminViews__card} ${styles.adminViews__infoCard}`}>
+            <h1 className={styles.adminViews__infoTitle}>Detalle de la PQRSD</h1>
+            <p className={styles.adminViews__infoRow}>
               <strong>Ticket:</strong> {record.ticket}
             </p>
-            <p className={styles.infoRow}>
+            <p className={styles.adminViews__infoRow}>
               <strong>Fecha de radicacion:</strong> {formatDate(record.createdAt)}
             </p>
-            <p className={styles.infoRow}>
+            <p className={styles.adminViews__infoRow}>
               <strong>Ciudadano:</strong> {record.citizenName}
             </p>
-            <p className={styles.infoRow}>
+            <p className={styles.adminViews__infoRow}>
               <strong>Dirigido a:</strong> {record.directedTo}
             </p>
-            <p className={styles.infoRow}>
+            <p className={styles.adminViews__infoRow}>
               <strong>Asunto:</strong> {record.subject}
             </p>
-            <p className={styles.infoRow}>
+            <p className={styles.adminViews__infoRow}>
               <strong>Descripcion:</strong> {record.description}
             </p>
           </article>
 
-          <article className={`${styles.card} ${styles.responseCard}`}>
-            <h2 className={styles.infoTitle}>Redactar respuesta</h2>
-            <p className={styles.metaLine}>
+          <article className={`${styles.adminViews__card} ${styles.adminViews__responseCard}`}>
+            <h2 className={styles.adminViews__infoTitle}>Redactar respuesta</h2>
+            <p className={styles.adminViews__metaLine}>
               Esta respuesta se genera como borrador y requiere validacion humana obligatoria antes del envio oficial.
             </p>
-            <p className={styles.metaLine}>
+            <p className={styles.adminViews__metaLine}>
               {record.reviewReason}
             </p>
 
@@ -138,21 +138,21 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
                 }
               }}
             >
-              <label className={styles.label} htmlFor="response-message">
+              <label className={styles.adminViews__label} htmlFor="response-message">
                 Respuesta oficial
               </label>
               <textarea
-                className={styles.textarea}
+                className={styles.adminViews__textarea}
                 id="response-message"
                 placeholder="Escribe aqui la respuesta al ciudadano..."
                 value={officialReply}
                 onChange={(event) => setOfficialReply(event.target.value)}
               />
 
-              {submitError ? <p className={styles.helperText}>{submitError}</p> : null}
+              {submitError ? <p className={styles.adminViews__helperText}>{submitError}</p> : null}
 
-              <div className={styles.actions}>
-                <button className={styles.primaryButton} type="submit" disabled={isSubmitting}>
+              <div className={styles.adminViews__actions}>
+                <button className={styles.adminViews__primaryButton} type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Enviando...' : 'Enviar respuesta'}
                 </button>
               </div>

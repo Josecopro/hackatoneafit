@@ -22,14 +22,14 @@ export default function App({ initialView = 'normal' }: AppProps) {
       : 'Canal reservado para denuncias y reportes preservando confidencialidad.';
 
   return (
-    <div className={`${styles.appShell} page-backdrop`}>
-      <a href="#main-content" className="skip-link">
+    <div className={`${styles.app__shell} page-backdrop`}>
+      <a href="#main-content" className="a11y__skip-link">
         Saltar al contenido principal
       </a>
 
       <HeroSection heroTitle={heroTitle} heroDescription={heroDescription} />
 
-      <main id="main-content" className={styles.main}>
+      <main id="main-content" className={styles.app__main}>
         <section
           id={view === 'normal' ? 'panel-normal' : 'panel-anon'}
           role="tabpanel"

@@ -48,28 +48,28 @@ export default function LoginView() {
   }
 
   return (
-    <main className={styles.shell}>
-      <div className={styles.container}>
-        <div className={styles.topBar}>
-          <span className={styles.brand}>Administracion PQRSD</span>
-          <Link className={styles.topLink} href="/">
+    <main className={styles.adminViews__shell}>
+      <div className={styles.adminViews__container}>
+        <div className={styles.adminViews__topBar}>
+          <span className={styles.adminViews__brand}>Administracion PQRSD</span>
+          <Link className={styles.adminViews__topLink} href="/">
             Ir al portal ciudadano
           </Link>
         </div>
 
-        <section className={`${styles.card} ${styles.loginCard}`}>
-          <h1 className={styles.title}>Ingreso de funcionarios</h1>
-          <p className={styles.subtitle}>
+        <section className={`${styles.adminViews__card} ${styles.adminViews__loginCard}`}>
+          <h1 className={styles.adminViews__title}>Ingreso de funcionarios</h1>
+          <p className={styles.adminViews__subtitle}>
             Accede con tus credenciales institucionales para revisar y responder PQRSD.
           </p>
 
-          <form className={styles.form} onSubmit={onSubmit}>
+          <form className={styles.adminViews__form} onSubmit={onSubmit}>
             <div>
-              <label className={styles.label} htmlFor="email">
+              <label className={styles.adminViews__label} htmlFor="email">
                 Correo institucional
               </label>
               <input
-                className={styles.input}
+                className={styles.adminViews__input}
                 id="email"
                 type="email"
                 placeholder="nombre@medellin.gov.co"
@@ -81,11 +81,11 @@ export default function LoginView() {
             </div>
 
             <div>
-              <label className={styles.label} htmlFor="password">
+              <label className={styles.adminViews__label} htmlFor="password">
                 Contrasena
               </label>
               <input
-                className={styles.input}
+                className={styles.adminViews__input}
                 id="password"
                 type="password"
                 placeholder="********"
@@ -96,14 +96,14 @@ export default function LoginView() {
               />
             </div>
 
-            {error && <p className={styles.errorText}>{error}</p>}
+            {error && <p className={styles.adminViews__errorText}>{error}</p>}
 
-            <button className={styles.primaryButton} type="submit" disabled={isSubmitting}>
+            <button className={styles.adminViews__primaryButton} type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Validando...' : 'Ingresar'}
             </button>
           </form>
 
-          <p className={styles.helperText}>El acceso solo esta habilitado para cuentas administrativas autorizadas.</p>
+          <p className={styles.adminViews__helperText}>El acceso solo esta habilitado para cuentas administrativas autorizadas.</p>
         </section>
       </div>
     </main>

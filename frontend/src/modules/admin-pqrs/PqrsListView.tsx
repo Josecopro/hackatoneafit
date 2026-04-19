@@ -11,9 +11,9 @@ type PqrsListViewProps = {
 };
 
 function statusClass(status: string): string {
-  if (status === 'Radicada') return `${styles.badge} ${styles.statusRadicada}`;
-  if (status === 'En revision') return `${styles.badge} ${styles.statusEnRevision}`;
-  return `${styles.badge} ${styles.statusRespondida}`;
+  if (status === 'Radicada') return `${styles.adminViews__badge} ${styles.adminViews__statusRadicada}`;
+  if (status === 'En revision') return `${styles.adminViews__badge} ${styles.adminViews__statusEnRevision}`;
+  return `${styles.adminViews__badge} ${styles.adminViews__statusRespondida}`;
 }
 
 export default function PqrsListView({ records }: PqrsListViewProps) {
@@ -24,28 +24,28 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
   };
 
   return (
-    <main className={styles.shell}>
-      <div className={styles.container}>
-        <div className={styles.topBar}>
-          <span className={styles.brand}>Administracion PQRSD</span>
-          <Link className={styles.topLink} href="/api/admin/auth/logout">
+    <main className={styles.adminViews__shell}>
+      <div className={styles.adminViews__container}>
+        <div className={styles.adminViews__topBar}>
+          <span className={styles.adminViews__brand}>Administracion PQRSD</span>
+          <Link className={styles.adminViews__topLink} href="/api/admin/auth/logout">
             Cerrar sesion
           </Link>
         </div>
 
-        <section className={styles.card}>
-          <header className={styles.listHeader}>
-            <h1 className={styles.title}>Listado de PQRSD</h1>
-            <p className={styles.metaLine}>
+        <section className={styles.adminViews__card}>
+          <header className={styles.adminViews__listHeader}>
+            <h1 className={styles.adminViews__title}>Listado de PQRSD</h1>
+            <p className={styles.adminViews__metaLine}>
               Orden actual: priorizado por dias habiles transcurridos y nivel de sentimiento para atencion operativa.
             </p>
           </header>
 
           {records.length === 0 ? (
-            <p className={styles.emptyState}>No hay registros para mostrar.</p>
+            <p className={styles.adminViews__emptyState}>No hay registros para mostrar.</p>
           ) : (
-            <div className={styles.tableWrap}>
-              <table className={styles.table}>
+            <div className={styles.adminViews__tableWrap}>
+              <table className={styles.adminViews__table}>
                 <thead>
                   <tr>
                     <th>Fecha radicacion</th>
@@ -74,8 +74,8 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
                     >
                       <td>{formatDate(record.createdAt)}</td>
                       <td>{record.ticket}</td>
-                      <td className={styles.subjectCell}>
-                        <span className={styles.subjectText} title={record.subject}>
+                      <td className={styles.adminViews__subjectCell}>
+                        <span className={styles.adminViews__subjectText} title={record.subject}>
                           {record.subject}
                         </span>
                       </td>
@@ -90,7 +90,7 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
                       </td>
                       <td>
                         <Link
-                          className={styles.linkButton}
+                          className={styles.adminViews__linkButton}
                           href={`/administracion/pqrs/${encodeURIComponent(record.id)}/responder`}
                           onClick={(event) => event.stopPropagation()}
                         >

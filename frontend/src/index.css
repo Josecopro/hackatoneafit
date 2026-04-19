@@ -65,18 +65,18 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
 }
 
-.font-display {
+.u__font-display {
   font-family: var(--font-display);
 }
 
 
-.hero-grid-pattern {
+.hero__grid-pattern {
   background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 36px 36px;
 }
 
-.skip-link {
+.a11y__skip-link {
   position: absolute;
   left: 1rem;
   top: -100%;
@@ -89,7 +89,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
-.skip-link:focus {
+.a11y__skip-link:focus {
   top: 1rem;
 }
 
@@ -103,6 +103,6 @@ h1, h2, h3, h4, h5, h6 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
+.u__animate-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
 }

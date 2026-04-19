@@ -8,22 +8,22 @@ type HeroSectionProps = {
 
 export default function HeroSection({ heroTitle, heroDescription }: HeroSectionProps) {
   return (
-    <section className={styles.hero}>
-      <div className={styles.heroOverlay}>
-        <div className={`${styles.gridPattern} hero-grid-pattern`} />
+    <section className={styles.app__hero}>
+      <div className={styles.app__heroOverlay}>
+        <div className={`${styles.app__gridPattern} hero__grid-pattern`} />
       </div>
 
-      <div className={styles.heroInner}>
-        <div className={styles.heroTopBar}>
-          <Link href="/" className={styles.heroBackButton}>
+      <div className={styles.app__heroInner}>
+        <div className={styles.app__heroTopBar}>
+          <Link href="/" className={styles.app__heroBackButton}>
             Volver al inicio
           </Link>
         </div>
 
-        <div className={styles.heroGrid}>
+        <div className={styles.app__heroGrid}>
           <div>
-            <h2 className={styles.heroTitle}>{heroTitle}</h2>
-            <p className={styles.heroDescription}>{heroDescription}</p>
+            <h2 className={styles.app__heroTitle}>{heroTitle}</h2>
+            <p className={styles.app__heroDescription}>{heroDescription}</p>
           </div>
         </div>
 

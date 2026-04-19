@@ -146,55 +146,55 @@ export default function EntryFlowSelector() {
   };
 
   return (
-    <main className={`${styles.page}`}>
+    <main className={`${styles.entryFlow__page}`}>
       {showSuggestionPopup && (
-        <div className={styles.popupOverlay} role="dialog" aria-modal="true" aria-label="Sugerencia de búsqueda rápida">
-          <div className={styles.popupCard}>
+        <div className={styles.entryFlow__popupOverlay} role="dialog" aria-modal="true" aria-label="Sugerencia de búsqueda rápida">
+          <div className={styles.entryFlow__popupCard}>
             <button
               type="button"
               aria-label="Cerrar sugerencia"
-              className={styles.popupDismissBtn}
+              className={styles.entryFlow__popupDismissBtn}
               onClick={closeSuggestionPopup}
             >
               X
             </button>
-            <h3 className={styles.popupTitle}>Puede que tu pregunta ya la hayan respondido</h3>
-            <p className={styles.popupText}>
+            <h3 className={styles.entryFlow__popupTitle}>Puede que tu pregunta ya la hayan respondido</h3>
+            <p className={styles.entryFlow__popupText}>
               Escribe una breve descripción de tu duda o consulta y te mostraremos información relevante que ya esté disponible en nuestro portal.
             </p>
             <input
               type="text"
-              className={styles.popupInput}
+              className={styles.entryFlow__popupInput}
               placeholder="Ejemplo: ¿Cómo puedo cambiar mi dirección de residencia?"
               value={queryText}
               onChange={(event) => setQueryText(event.target.value)}
             />
 
             {suggestions.length > 0 && (
-              <div className={styles.popupSuggestionList}>
+              <div className={styles.entryFlow__popupSuggestionList}>
                 {suggestions.map((item) => (
-                  <article key={item.id} className={styles.popupSuggestionItem}>
-                    <p className={styles.popupSuggestionCase}>{item.caso_tipo || 'Caso relacionado'}</p>
-                    <p className={styles.popupSuggestionText}>{item.respuesta_validada}</p>
+                  <article key={item.id} className={styles.entryFlow__popupSuggestionItem}>
+                    <p className={styles.entryFlow__popupSuggestionCase}>{item.caso_tipo || 'Caso relacionado'}</p>
+                    <p className={styles.entryFlow__popupSuggestionText}>{item.respuesta_validada}</p>
                   </article>
                 ))}
               </div>
             )}
 
-            <div className={styles.popupActions}>
+            <div className={styles.entryFlow__popupActions}>
               {showDecisionActions ? (
                 <>
-                  <button type="button" className={styles.popupCloseBtn} onClick={closeSuggestionPopup}>
+                  <button type="button" className={styles.entryFlow__popupCloseBtn} onClick={closeSuggestionPopup}>
                     Ya resolvi mi duda
                   </button>
-                  <button type="button" className={styles.popupContinueBtn} onClick={continueToSelectedFlow}>
+                  <button type="button" className={styles.entryFlow__popupContinueBtn} onClick={continueToSelectedFlow}>
                     Seguir con la PQRS
                   </button>
                 </>
               ) : (
                 <button
                   type="button"
-                  className={styles.popupContinueBtn}
+                  className={styles.entryFlow__popupContinueBtn}
                   onClick={searchQuickSuggestions}
                   disabled={isSearchingSuggestions}
                 >
@@ -206,34 +206,34 @@ export default function EntryFlowSelector() {
         </div>
       )}
 
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={`${styles.title} font-display`}>PQRSD Alcaldía de Medellín</h1>
-          <div className={styles.description}>
-            <p className={styles.bigText}>
+      <div className={styles.entryFlow__container}>
+        <header className={styles.entryFlow__header}>
+          <h1 className={`${styles.entryFlow__title} u__font-display`}>PQRSD Alcaldía de Medellín</h1>
+          <div className={styles.entryFlow__description}>
+            <p className={styles.entryFlow__bigText}>
               En esta opción podrás radicar peticiones, quejas, reclamos, sugerencias o denuncias por actos de corrupción dirigidas al Distrito Especial de Ciencia, Tecnología e Innovación de Medellín.
             </p>
             <div>
-              <p className={styles.noteTitle}>Ten en cuenta que:</p>
-              <ul className={styles.noteList}>
+              <p className={styles.entryFlow__noteTitle}>Ten en cuenta que:</p>
+              <ul className={styles.entryFlow__noteList}>
                 <li>Las PQRSD tienen términos legales de respuesta, según la Ley 1755 de 2015.</li>
                 <li>Cada solicitud se registra, gestiona y debe recibir una respuesta oportuna, clara, precisa, suficiente y efectiva.</li>
                 <li>Presentar una PQRSD es un derecho fundamental de todos los ciudadanos.</li>
               </ul>
             </div>
-            <p className={styles.strongText}>Elige la opción de tu interés</p>
+            <p className={styles.entryFlow__strongText}>Elige la opción de tu interés</p>
           </div>
         </header>
 
-        <section className={styles.cards}>
+        <section className={styles.entryFlow__cards}>
           <button
             type="button"
             onClick={() => openSuggestionPopup('normal')}
-            className={styles.card}
+            className={styles.entryFlow__card}
           >
-            <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS</h2>
+            <h2 className={`${styles.entryFlow__cardTitle} u__font-display`}>Radicacion de PQRS</h2>
 
-            <span className={`${styles.cardCta} ${styles.cardCtaNormal}`}>
+            <span className={`${styles.entryFlow__cardCta} ${styles.entryFlow__cardCtaNormal}`}>
               Radicacion de PQRS
             </span>
           </button>
@@ -241,18 +241,18 @@ export default function EntryFlowSelector() {
           <button
             type="button"
             onClick={() => openSuggestionPopup('anonymous')}
-            className={styles.card}
+            className={styles.entryFlow__card}
           >
-            <h2 className={`${styles.cardTitle} font-display`}>Radicacion de PQRS anonimas</h2>
+            <h2 className={`${styles.entryFlow__cardTitle} u__font-display`}>Radicacion de PQRS anonimas</h2>
 
-            <span className={`${styles.cardCta} ${styles.cardCtaAnon}`}>
+            <span className={`${styles.entryFlow__cardCta} ${styles.entryFlow__cardCtaAnon}`}>
               Radicacion de PQRS anonimas
             </span>
           </button>
         </section>
 
         {showNormalReqForm && (
-          <div className={`${styles.reqFormWrap} animate-fade-in`}>
+          <div className={`${styles.entryFlow__reqFormWrap} u__animate-fade-in`}>
             <StepCard
               stepNumber="1"
               title="REQ persona normal"
@@ -287,9 +287,9 @@ export default function EntryFlowSelector() {
 
                   goToNormalFlow();
                 }}
-                className={styles.reqForm}
+                className={styles.entryFlow__reqForm}
               >
-                <div className={styles.reqGrid}>
+                <div className={styles.entryFlow__reqGrid}>
                   <InputField
                     id="entry_doc_type"
                     name="entry_doc_type"
@@ -329,22 +329,22 @@ export default function EntryFlowSelector() {
                   />
                 </div>
 
-                <div className={styles.policyBox}>
-                  <label className={styles.policyLabel}>
+                <div className={styles.entryFlow__policyBox}>
+                  <label className={styles.entryFlow__policyLabel}>
                     <input
                       type="checkbox"
                       name="entry_accept_policy"
                       required
-                      className={styles.policyCheckbox}
+                      className={styles.entryFlow__policyCheckbox}
                     />
-                    <span className={styles.policyText}>
+                    <span className={styles.entryFlow__policyText}>
                       Acepto los términos, condiciones y políticas de privacidad de la
                       {' '}
                       <Link
                         href="/politica-tratamiento-datos"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={styles.policyLink}
+                        className={styles.entryFlow__policyLink}
                       >
                         política de tratamiento de datos
                       </Link>
@@ -352,12 +352,12 @@ export default function EntryFlowSelector() {
                   </label>
                 </div>
 
-                {entryError && <p className={styles.formError}>{entryError}</p>}
+                {entryError && <p className={styles.entryFlow__formError}>{entryError}</p>}
 
-                <div className={styles.actions}>
+                <div className={styles.entryFlow__actions}>
                   <button
                     type="submit"
-                    className={styles.submitBtn}
+                    className={styles.entryFlow__submitBtn}
                   >
                     Continuar con Radicacion de pQRS
                   </button>

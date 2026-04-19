@@ -1,10 +1,10 @@
-.page {
+.entryFlow__page {
   min-height: 100vh;
   color: var(--color-text-strong);
   padding: 3rem 1rem;
 }
 
-.popupOverlay {
+.entryFlow__popupOverlay {
   position: fixed;
   inset: 0;
   background: rgba(var(--rgb-brand), 0.45);
@@ -16,7 +16,7 @@
   padding: 1rem;
 }
 
-.popupCard {
+.entryFlow__popupCard {
   position: relative;
   width: min(32rem, 100%);
   background: var(--color-white);
@@ -26,7 +26,7 @@
   padding: 1.25rem;
 }
 
-.popupDismissBtn {
+.entryFlow__popupDismissBtn {
   position: absolute;
   top: 0.65rem;
   right: 0.65rem;
@@ -41,25 +41,25 @@
   cursor: pointer;
 }
 
-.popupDismissBtn:hover {
+.entryFlow__popupDismissBtn:hover {
   color: var(--color-text-strong);
   border-color: var(--color-brand-300);
   background: var(--color-surface-soft);
 }
 
-.popupTitle {
+.entryFlow__popupTitle {
   margin: 0;
   font-size: 1.2rem;
   color: var(--color-text-strong);
 }
 
-.popupText {
+.entryFlow__popupText {
   margin-top: 0.65rem;
   color: var(--color-text-soft);
   line-height: 1.5;
 }
 
-.popupInput {
+.entryFlow__popupInput {
   width: 100%;
   margin-top: 0.9rem;
   border: 1px solid var(--color-border);
@@ -70,14 +70,14 @@
   color: var(--color-text-muted);
 }
 
-.popupActions {
+.entryFlow__popupActions {
   margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
 }
 
-.popupCloseBtn {
+.entryFlow__popupCloseBtn {
   border: 0;
   border-radius: 0.75rem;
   padding: 0.72rem 1rem;
@@ -87,11 +87,11 @@
   color: var(--color-white);
 }
 
-.popupCloseBtn:hover {
+.entryFlow__popupCloseBtn:hover {
   background: var(--color-brand-800);
 }
 
-.popupContinueBtn {
+.entryFlow__popupContinueBtn {
   border: 0;
   border-radius: 0.75rem;
   padding: 0.72rem 1rem;
@@ -101,17 +101,17 @@
   color: var(--color-white);
 }
 
-.popupContinueBtn:hover {
+.entryFlow__popupContinueBtn:hover {
   background: var(--color-brand-800);
 }
 
-.popupError {
+.entryFlow__popupError {
   margin-top: 0.5rem;
   color: #b91c1c;
   font-size: 0.85rem;
 }
 
-.popupSuggestionList {
+.entryFlow__popupSuggestionList {
   margin-top: 0.9rem;
   display: grid;
   gap: 0.6rem;
@@ -119,43 +119,43 @@
   overflow-y: auto;
 }
 
-.popupSuggestionItem {
+.entryFlow__popupSuggestionItem {
   border: 1px solid var(--color-border);
   border-radius: 0.7rem;
   padding: 0.7rem;
   background: var(--color-surface-soft);
 }
 
-.popupSuggestionCase {
+.entryFlow__popupSuggestionCase {
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-brand-800);
   margin: 0 0 0.3rem;
 }
 
-.popupSuggestionText {
+.entryFlow__popupSuggestionText {
   font-size: 0.9rem;
   color: var(--color-text-strong);
   margin: 0;
 }
 
-.container {
+.entryFlow__container {
   max-width: 64rem;
   margin: 0 auto;
 }
 
-.header {
+.entryFlow__header {
   margin-bottom: 2.5rem;
 }
 
-.title {
+.entryFlow__title {
   margin-top: 1.25rem;
   font-size: 2.25rem;
   line-height: 1.1;
   font-weight: 800;
 }
 
-.description {
+.entryFlow__description {
   color: var(--color-text-soft);
   max-width: 56rem;
   margin-top: 1rem;
@@ -164,16 +164,16 @@
   gap: 1rem;
 }
 
-.bigText {
+.entryFlow__bigText {
   font-size: 1.125rem;
 }
 
-.noteTitle {
+.entryFlow__noteTitle {
   font-weight: 600;
   color: var(--color-text);
 }
 
-.noteList {
+.entryFlow__noteList {
   list-style: disc;
   padding-left: 1.5rem;
   margin-top: 0.5rem;
@@ -182,19 +182,19 @@
   gap: 0.25rem;
 }
 
-.strongText {
+.entryFlow__strongText {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-text-strong);
 }
 
-.cards {
+.entryFlow__cards {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
-.card {
+.entryFlow__card {
   text-align: left;
   background: rgba(var(--rgb-white), 0.95);
   border: 1px solid var(--color-border);
@@ -205,29 +205,29 @@
   cursor: pointer;
 }
 
-.card:hover {
+.entryFlow__card:hover {
   box-shadow: 0 22px 60px -30px rgba(var(--rgb-brand), 0.5);
   transition: all 0.2s ease;
 }
 
 
-.normalIcon {
+.entryFlow__normalIcon {
   background: var(--color-brand-100);
   color: var(--color-brand-800);
 }
 
-.anonIcon {
+.entryFlow__anonIcon {
   background: var(--color-surface-muted);
   color: var(--color-text-strong);
 }
 
-.cardTitle {
+.entryFlow__cardTitle {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-text-strong);
 }
 
-.cardCta {
+.entryFlow__cardCta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -238,31 +238,31 @@
   margin-top: 1rem;
 }
 
-.cardCtaNormal {
+.entryFlow__cardCtaNormal {
   background: var(--color-brand-700);
 }
 
-.cardCtaAnon {
+.entryFlow__cardCtaAnon {
   background: var(--color-brand-900);
 }
 
-.reqFormWrap {
+.entryFlow__reqFormWrap {
   margin-top: 2rem;
 }
 
-.reqForm {
+.entryFlow__reqForm {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.reqGrid {
+.entryFlow__reqGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
 }
 
-.policyBox {
+.entryFlow__policyBox {
   margin-top: 1.25rem;
   padding: 1rem;
   border-radius: 0.75rem;
@@ -270,24 +270,24 @@
   background: rgba(var(--rgb-brand), 0.08);
 }
 
-.policyLabel {
+.entryFlow__policyLabel {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
 }
 
-.policyCheckbox {
+.entryFlow__policyCheckbox {
   margin-top: 0.25rem;
   width: 1rem;
   height: 1rem;
 }
 
-.policyText {
+.entryFlow__policyText {
   font-size: 0.875rem;
   color: var(--color-brand-800);
 }
 
-.policyLink {
+.entryFlow__policyLink {
   font-weight: 700;
   text-decoration: underline;
   display: inline-flex;
@@ -295,19 +295,19 @@
   gap: 0.25rem;
 }
 
-.formError {
+.entryFlow__formError {
   margin-top: 0.25rem;
   color: #b91c1c;
   font-size: 0.875rem;
   font-weight: 600;
 }
 
-.actions {
+.entryFlow__actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.submitBtn {
+.entryFlow__submitBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -320,30 +320,30 @@
   cursor: pointer;
 }
 
-.submitBtn:hover {
+.entryFlow__submitBtn:hover {
   background: var(--color-brand-800);
 }
 
 @media (min-width: 768px) {
-  .page {
+  .entryFlow__page {
     padding-inline: 1.5rem;
   }
 
-  .title {
+  .entryFlow__title {
     font-size: 3rem;
   }
 
-  .cards {
+  .entryFlow__cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .reqGrid {
+  .entryFlow__reqGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
-  .page {
+  .entryFlow__page {
     padding-inline: 2rem;
   }
 }

@@ -49,6 +49,30 @@ npm run lint
 
 Si `npm run lint` reporta errores en `.next/types/validator.ts`, revisa que cada ruta en `src/app/**/page.tsx` exporte un `default` válido y que `src/schema.ts` sea compatible con la versión actual de Zod.
 
+## Convencion BEM para estilos
+
+Se adopto convencion BEM en clases de `scss` y `css` para mantener consistencia visual y facilitar mantenimiento.
+
+Reglas:
+
+- Bloques por modulo o contexto visual: `app`, `entryFlow`, `sharedFields`, `adminViews`.
+- Elementos con doble guion bajo: `bloque__elemento`.
+- Utilidades globales con prefijos semanticos (`a11y__*`, `hero__*`, `u__*`) cuando no pertenecen a un modulo CSS.
+
+Ejemplos actuales:
+
+- `styles.app__shell`, `styles.app__heroTitle`
+- `styles.entryFlow__popupCard`, `styles.entryFlow__submitBtn`
+- `styles.sharedFields__inputControl`, `styles.sharedFields__trackingValue`
+- `styles.adminViews__table`, `styles.adminViews__statusEnRevision`
+- Clases globales: `a11y__skip-link`, `hero__grid-pattern`, `u__animate-fade-in`
+
+Guia para nuevas clases:
+
+1. Define primero el bloque del archivo/modulo.
+2. Nombra cada parte interna como elemento con `__`.
+3. Evita nombres genericos (`container`, `title`, `card`) sin prefijo de bloque.
+
 ## Supabase (persistencia de PQRSD)
 
 1. Crea la tabla ejecutando el script `supabase/pqrsd_schema.sql` en el SQL Editor de Supabase.
@@ -67,14 +91,6 @@ Cada radicación guarda:
 - `tracking_id` único
 - `payload` JSONB con todos los campos validados del formulario
 
-## Autenticacion de administradores
-
-Configura tambien estas variables en `frontend/.env.local` (o en la raiz si ejecutas con `run-dev.sh`):
-
-```bash
-BACKEND_BASE_URL=https://hackatoneafit.onrender.com
-ADMIN_AUTH_SECRET=change-this-secret-with-at-least-32-chars
-```
 
 Flujo implementado:
 

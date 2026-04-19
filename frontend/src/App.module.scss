@@ -1,18 +1,18 @@
-.appShell {
+.app__shell {
   min-height: 100vh;
   color: var(--color-text-strong);
   padding-bottom: 3rem;
 }
 
-.form {
+.app__form {
   position: relative;
 }
 
-.fadeIn {
+.app__fadeIn {
   animation: fade-in 0.35s ease;
 }
 
-.overlay {
+.app__overlay {
   position: absolute;
   inset: 0;
   z-index: 10;
@@ -24,7 +24,7 @@
   justify-content: center;
 }
 
-.overlayCard {
+.app__overlayCard {
   background: var(--color-white);
   padding: 1.5rem;
   border-radius: 1rem;
@@ -35,24 +35,24 @@
   gap: 0.75rem;
 }
 
-.overlayText {
+.app__overlayText {
   font-weight: 600;
   color: var(--color-text);
 }
 
-.spinner {
+.app__spinner {
   animation: spin 1s linear infinite;
 }
 
-.spinnerNormal {
+.app__spinnerNormal {
   color: var(--color-brand-600);
 }
 
-.spinnerAnon {
+.app__spinnerAnon {
   color: var(--color-brand-900);
 }
 
-.serverError {
+.app__serverError {
   background: var(--color-danger-bg);
   border: 1px solid var(--color-danger-border);
   color: var(--color-danger);
@@ -64,34 +64,34 @@
   gap: 0.75rem;
 }
 
-.serverErrorIcon {
+.app__serverErrorIcon {
   flex-shrink: 0;
   margin-top: 0.125rem;
 }
 
-.serverErrorTitle {
+.app__serverErrorTitle {
   display: block;
   font-weight: 700;
 }
 
-.serverErrorText {
+.app__serverErrorText {
   font-size: 0.875rem;
 }
 
-.gridTwo {
+.app__gridTwo {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
 }
 
-.checkboxStack {
+.app__checkboxStack {
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.checkboxCard {
+.app__checkboxCard {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -101,7 +101,7 @@
   background: rgba(var(--rgb-white), 0.7);
 }
 
-.checkbox {
+.app__checkbox {
   margin-top: 0.25rem;
   width: 1rem;
   height: 1rem;
@@ -109,16 +109,16 @@
   border: 1px solid var(--color-border-strong);
 }
 
-.checkboxText {
+.app__checkboxText {
   font-size: 0.875rem;
   color: var(--color-text);
 }
 
-.descriptionWrap {
+.app__descriptionWrap {
   margin-top: 1.25rem;
 }
 
-.verificationBox {
+.app__verificationBox {
   margin-top: 1rem;
   padding: 1rem;
   border: 1px solid var(--color-border);
@@ -126,23 +126,23 @@
   background: var(--color-white);
 }
 
-.verificationText {
+.app__verificationText {
   font-size: 0.875rem;
   color: var(--color-text-strong);
   font-weight: 600;
 }
 
-.errorText {
+.app__errorText {
   color: var(--color-danger);
   font-size: 0.75rem;
   margin-top: 0.5rem;
 }
 
-.attachmentLinkWrap {
+.app__attachmentLinkWrap {
   margin-bottom: 1rem;
 }
 
-.attachmentLink {
+.app__attachmentLink {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -152,11 +152,11 @@
   text-decoration: underline;
 }
 
-.attachmentLink:hover {
+.app__attachmentLink:hover {
   color: var(--color-brand-900);
 }
 
-.termsCard {
+.app__termsCard {
   background: var(--color-white);
   padding: 1.5rem;
   border-radius: 1.5rem;
@@ -166,12 +166,12 @@
   transition: all 0.2s;
 }
 
-.termsCardError {
+.app__termsCardError {
   border-color: var(--color-danger-soft);
   box-shadow: 0 0 0 4px var(--color-danger-ring);
 }
 
-.termsLabel {
+.app__termsLabel {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -183,11 +183,11 @@
   margin-bottom: 1rem;
 }
 
-.termsLabel:hover {
+.app__termsLabel:hover {
   background: var(--color-surface-soft);
 }
 
-.termsCheckbox {
+.app__termsCheckbox {
   margin-top: 0.125rem;
   width: 1rem;
   height: 1rem;
@@ -195,20 +195,20 @@
   border: 1px solid var(--color-border-strong);
 }
 
-.termsText {
+.app__termsText {
   font-size: 0.875rem;
   color: var(--color-text);
 }
 
-.actions {
+.app__actions {
   display: flex;
   justify-content: flex-end;
   padding-top: 0.5rem;
   border-top: 1px solid var(--color-surface-muted);
 }
 
-.submitNormal,
-.submitAnon {
+.app__submitNormal,
+.app__submitAnon {
   border: 0;
   color: var(--color-white);
   font-weight: 700;
@@ -221,29 +221,29 @@
   transition: all 0.2s;
 }
 
-.submitNormal {
+.app__submitNormal {
   background: var(--color-brand-700);
 }
 
-.submitNormal:hover {
+.app__submitNormal:hover {
   background: var(--color-brand-800);
 }
 
-.submitAnon {
+.app__submitAnon {
   background: var(--color-brand-900);
 }
 
-.submitAnon:hover {
+.app__submitAnon:hover {
   background: var(--color-brand-800);
 }
 
-.submitNormal:disabled,
-.submitAnon:disabled {
+.app__submitNormal:disabled,
+.app__submitAnon:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.suggestionBackdrop {
+.app__suggestionBackdrop {
   position: fixed;
   inset: 0;
   z-index: 40;
@@ -254,7 +254,7 @@
   padding: 1rem;
 }
 
-.suggestionCard {
+.app__suggestionCard {
   width: min(760px, 100%);
   max-height: 85vh;
   overflow: auto;
@@ -265,45 +265,45 @@
   border: 1px solid var(--color-border);
 }
 
-.suggestionTitle {
+.app__suggestionTitle {
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--color-text-strong);
 }
 
-.suggestionSubtitle {
+.app__suggestionSubtitle {
   margin-top: 0.35rem;
   font-size: 0.9rem;
   color: var(--color-text-soft);
 }
 
-.suggestionList {
+.app__suggestionList {
   margin-top: 1rem;
   display: grid;
   gap: 0.75rem;
 }
 
-.suggestionItem {
+.app__suggestionItem {
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 0.85rem;
   background: var(--color-surface-soft);
 }
 
-.suggestionCase {
+.app__suggestionCase {
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-brand-800);
   margin-bottom: 0.4rem;
 }
 
-.suggestionText {
+.app__suggestionText {
   font-size: 0.9rem;
   color: var(--color-text-strong);
   line-height: 1.4;
 }
 
-.suggestionActions {
+.app__suggestionActions {
   margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
@@ -311,13 +311,13 @@
   flex-wrap: wrap;
 }
 
-.brand {
+.app__brand {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.brandIcon {
+.app__brandIcon {
   background: var(--color-brand-700);
   color: var(--color-white);
   padding: 0.5rem;
@@ -325,14 +325,14 @@
   box-shadow: 0 4px 12px -10px rgba(var(--rgb-brand), 0.5);
 }
 
-.brandTitle {
+.app__brandTitle {
   font-size: 1.125rem;
   line-height: 1.2;
   color: var(--color-text-strong);
   font-weight: 700;
 }
 
-.brandSub {
+.app__brandSub {
   margin-top: 0.125rem;
   font-size: 0.65rem;
   color: var(--color-text-muted);
@@ -341,13 +341,13 @@
   text-transform: uppercase;
 }
 
-.topActions {
+.app__topActions {
   display: flex;
   align-items: center;
   gap: 1.25rem;
 }
 
-.myRecords {
+.app__myRecords {
   color: var(--color-text-soft);
   font-weight: 600;
   font-size: 0.875rem;
@@ -356,11 +356,11 @@
   cursor: pointer;
 }
 
-.myRecords:hover {
+.app__myRecords:hover {
   color: var(--color-brand-700);
 }
 
-.divider {
+.app__divider {
   height: 1rem;
   width: 1px;
   background: var(--color-border);
@@ -368,14 +368,14 @@
 
 
 
-.hero {
+.app__hero {
   background-color: var(--color-brand-800);
   border-bottom: 1px solid var(--color-brand-900);
   position: relative;
   overflow: hidden;
 }
 
-.heroOverlay {
+.app__heroOverlay {
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -384,13 +384,13 @@
 
 
 
-.gridPattern {
+.app__gridPattern {
   position: absolute;
   inset: 0;
   opacity: 0.2;
 }
 
-.heroInner {
+.app__heroInner {
   max-width: 64rem;
   margin: 0 auto;
   padding: 4rem 1rem 5rem;
@@ -398,11 +398,11 @@
   z-index: 1;
 }
 
-.heroTopBar {
+.app__heroTopBar {
   margin-bottom: 1.25rem;
 }
 
-.heroBackButton {
+.app__heroBackButton {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -415,20 +415,20 @@
   background: rgba(var(--rgb-white), 0.08);
 }
 
-.heroBackButton:hover {
+.app__heroBackButton:hover {
   background: rgba(var(--rgb-white), 0.16);
   color: var(--color-white);
 }
 
 
 
-.heroGrid {
+.app__heroGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
 }
 
-.heroTitle {
+.app__heroTitle {
   font-size: 2.25rem;
   font-weight: 800;
   color: var(--color-white);
@@ -436,13 +436,13 @@
   letter-spacing: -0.02em;
 }
 
-.heroDescription {
+.app__heroDescription {
   color: rgba(var(--rgb-white), 0.86);
   max-width: 42rem;
   line-height: 1.6;
 }
 
-.heroCard {
+.app__heroCard {
   background: rgba(var(--rgb-white), 0.1);
   border: 1px solid rgba(var(--rgb-white), 0.24);
   border-radius: 1rem;
@@ -451,26 +451,26 @@
   color: var(--color-brand-100);
 }
 
-.heroCardTag {
+.app__heroCardTag {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--color-brand-200);
 }
 
-.heroCardTitle {
+.app__heroCardTitle {
   font-size: 1.5rem;
   font-weight: 700;
   margin-top: 0.25rem;
 }
 
-.heroCardText {
+.app__heroCardText {
   margin-top: 0.5rem;
   font-size: 0.875rem;
   color: rgba(var(--rgb-white), 0.84);
 }
 
-.main {
+.app__main {
   max-width: 64rem;
   margin: 0 auto;
   padding: 0 1rem;
@@ -479,7 +479,7 @@
   z-index: 20;
 }
 
-.tabs {
+.app__tabs {
   background: var(--color-white);
   padding: 0.375rem;
   border-radius: 1rem;
@@ -492,7 +492,7 @@
   margin-right: auto;
 }
 
-.tabButton {
+.app__tabButton {
   flex: 1;
   border: 0;
   display: inline-flex;
@@ -507,42 +507,42 @@
   cursor: pointer;
 }
 
-.tabInactive {
+.app__tabInactive {
   color: var(--color-text-muted);
   background: transparent;
 }
 
-.tabInactive:hover {
+.app__tabInactive:hover {
   color: var(--color-text-strong);
   background: var(--color-surface-soft);
 }
 
-.tabNormalActive {
+.app__tabNormalActive {
   background: rgba(var(--rgb-brand), 0.08);
   color: var(--color-brand-800);
   box-shadow: inset 0 0 0 1px rgba(var(--rgb-brand), 0.25);
 }
 
-.tabAnonActive {
+.app__tabAnonActive {
   background: var(--color-brand-900);
   color: var(--color-white);
   box-shadow: var(--shadow-elevated);
 }
 
-.iconNormalActive {
+.app__iconNormalActive {
   color: var(--color-brand-700);
 }
 
-.iconAnonActive {
+.app__iconAnonActive {
   color: var(--color-brand-100);
 }
 
-.backWrap {
+.app__backWrap {
   margin-bottom: 2.5rem;
   text-align: center;
 }
 
-.backLink {
+.app__backLink {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -554,7 +554,7 @@
   text-decoration: none;
 }
 
-.backLink:hover {
+.app__backLink:hover {
   color: var(--color-brand-900);
 }
 
@@ -562,25 +562,25 @@
 @media (min-width: 640px) {
 
   .headerInner,
-  .heroInner,
-  .main {
+  .app__heroInner,
+  .app__main {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 }
 
 @media (min-width: 768px) {
-  .gridTwo {
+  .app__gridTwo {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .heroGrid {
+  .app__heroGrid {
     grid-template-columns: 1.6fr 1fr;
     align-items: end;
     gap: 2.5rem;
   }
 
-  .heroTitle {
+  .app__heroTitle {
     font-size: 3rem;
   }
 }
@@ -588,8 +588,8 @@
 @media (min-width: 1024px) {
 
   .headerInner,
-  .heroInner,
-  .main {
+  .app__heroInner,
+  .app__main {
     padding-left: 2rem;
     padding-right: 2rem;
   }
@@ -597,8 +597,8 @@
 
 @media (max-width: 639px) {
 
-  .myRecords,
-  .divider {
+  .app__myRecords,
+  .app__divider {
     display: none;
   }
 }

@@ -136,22 +136,22 @@ export default function AnonymousPqrsForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={`${styles.form} ${styles.fadeIn}`} noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className={`${styles.app__form} ${styles.app__fadeIn}`} noValidate>
       {status === 'submitting' && (
-        <div className={styles.overlay} aria-live="polite" aria-busy="true">
-          <div className={styles.overlayCard}>
-            <Loader2 className={`${styles.spinner} ${styles.spinnerAnon}`} size={32} />
-            <p className={styles.overlayText}>Cifrando y enviando de forma segura...</p>
+        <div className={styles.app__overlay} aria-live="polite" aria-busy="true">
+          <div className={styles.app__overlayCard}>
+            <Loader2 className={`${styles.app__spinner} ${styles.app__spinnerAnon}`} size={32} />
+            <p className={styles.app__overlayText}>Cifrando y enviando de forma segura...</p>
           </div>
         </div>
       )}
 
       {serverError && (
-        <div className={styles.serverError} role="alert">
-          <AlertTriangle className={styles.serverErrorIcon} size={20} />
+        <div className={styles.app__serverError} role="alert">
+          <AlertTriangle className={styles.app__serverErrorIcon} size={20} />
           <div>
-            <span className={styles.serverErrorTitle}>Error del Servidor</span>
-            <span className={styles.serverErrorText}>{serverError}</span>
+            <span className={styles.app__serverErrorTitle}>Error del Servidor</span>
+            <span className={styles.app__serverErrorText}>{serverError}</span>
           </div>
         </div>
       )}
@@ -161,7 +161,7 @@ export default function AnonymousPqrsForm() {
         title="PQRSD anonimas"
         subtitle="Complete los campos mínimos para la radicación anónima"
       >
-        <div className={styles.gridTwo}>
+        <div className={styles.app__gridTwo}>
           <InputField
             label="Correo electrónico (opcional)"
             id="anon_email"
@@ -186,7 +186,7 @@ export default function AnonymousPqrsForm() {
           />
         </div>
 
-        <div className={styles.descriptionWrap}>
+        <div className={styles.app__descriptionWrap}>
           <TextareaField
             label="Descripción"
             id="anon_description"
@@ -198,12 +198,12 @@ export default function AnonymousPqrsForm() {
           />
         </div>
 
-        <label className={styles.checkboxCard}>
-          <input type="checkbox" {...register('authorize_information')} className={styles.checkbox} />
-          <span className={styles.checkboxText}>Autorizo el uso de esta información para el cumplimiento de las obligaciones legales.</span>
+        <label className={styles.app__checkboxCard}>
+          <input type="checkbox" {...register('authorize_information')} className={styles.app__checkbox} />
+          <span className={styles.app__checkboxText}>Autorizo el uso de esta información para el cumplimiento de las obligaciones legales.</span>
         </label>
         {errors.authorize_information && (
-          <p className={styles.errorText}>{String(errors.authorize_information.message)}</p>
+          <p className={styles.app__errorText}>{String(errors.authorize_information.message)}</p>
         )}
       </StepCard>
 
@@ -212,12 +212,12 @@ export default function AnonymousPqrsForm() {
         title="Nueva pestaña para documentos"
         subtitle="Adjunte documentos de soporte si lo requiere"
       >
-        <div className={styles.attachmentLinkWrap}>
+        <div className={styles.app__attachmentLinkWrap}>
           <Link
             href="/ManualDiligenciamiento.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.attachmentLink}
+            className={styles.app__attachmentLink}
           >
             Abrir manual de diligenciamiento (PDF)
             <ExternalLink size={14} />
@@ -226,7 +226,7 @@ export default function AnonymousPqrsForm() {
 
         <AttachmentRules />
 
-        <div className={styles.descriptionWrap}>
+        <div className={styles.app__descriptionWrap}>
           <AttachmentPicker
             files={attachments}
             setFiles={setAttachments}
@@ -237,16 +237,16 @@ export default function AnonymousPqrsForm() {
         </div>
       </StepCard>
 
-      <div className={`${styles.termsCard} ${errors.accept_terms ? styles.termsCardError : ''}`}>
-        <label className={styles.termsLabel}>
-          <input type="checkbox" {...register('accept_terms')} className={styles.termsCheckbox} />
-          <span className={styles.termsText}>Se aceptan los términos y condiciones.</span>
+      <div className={`${styles.app__termsCard} ${errors.accept_terms ? styles.app__termsCardError : ''}`}>
+        <label className={styles.app__termsLabel}>
+          <input type="checkbox" {...register('accept_terms')} className={styles.app__termsCheckbox} />
+          <span className={styles.app__termsText}>Se aceptan los términos y condiciones.</span>
         </label>
 
-        {errors.accept_terms && <p className={styles.errorText}>{String(errors.accept_terms.message)}</p>}
+        {errors.accept_terms && <p className={styles.app__errorText}>{String(errors.accept_terms.message)}</p>}
 
-        <div className={styles.actions}>
-          <button type="submit" disabled={status === 'submitting'} className={styles.submitAnon}>
+        <div className={styles.app__actions}>
+          <button type="submit" disabled={status === 'submitting'} className={styles.app__submitAnon}>
             {status === 'submitting' ? 'Procesando...' : 'Radicar de forma Anónima'}
             {status !== 'submitting' && <Send size={18} />}
           </button>

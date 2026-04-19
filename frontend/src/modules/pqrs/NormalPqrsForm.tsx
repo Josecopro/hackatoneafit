@@ -198,22 +198,22 @@ export default function NormalPqrsForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, onInvalidSubmit)} className={`${styles.form} ${styles.fadeIn}`} noValidate>
+    <form onSubmit={handleSubmit(onSubmit, onInvalidSubmit)} className={`${styles.app__form} ${styles.app__fadeIn}`} noValidate>
       {status === 'submitting' && (
-        <div className={styles.overlay} aria-live="polite" aria-busy="true">
-          <div className={styles.overlayCard}>
-            <Loader2 className={`${styles.spinner} ${styles.spinnerNormal}`} size={32} />
-            <p className={styles.overlayText}>Procesando solicitud...</p>
+        <div className={styles.app__overlay} aria-live="polite" aria-busy="true">
+          <div className={styles.app__overlayCard}>
+            <Loader2 className={`${styles.app__spinner} ${styles.app__spinnerNormal}`} size={32} />
+            <p className={styles.app__overlayText}>Procesando solicitud...</p>
           </div>
         </div>
       )}
 
       {serverError && (
-        <div className={styles.serverError} role="alert">
-          <AlertTriangle className={styles.serverErrorIcon} size={20} />
+        <div className={styles.app__serverError} role="alert">
+          <AlertTriangle className={styles.app__serverErrorIcon} size={20} />
           <div>
-            <span className={styles.serverErrorTitle}>Error del Servidor</span>
-            <span className={styles.serverErrorText}>{serverError}</span>
+            <span className={styles.app__serverErrorTitle}>Error del Servidor</span>
+            <span className={styles.app__serverErrorText}>{serverError}</span>
           </div>
         </div>
       )}
@@ -223,7 +223,7 @@ export default function NormalPqrsForm() {
         title="Formulario de PQRS - Radicación"
         subtitle="Complete los datos del solicitante y de los hechos"
       >
-        <div className={styles.gridTwo}>
+        <div className={styles.app__gridTwo}>
           <InputField
             label="Persona"
             id="person_type"
@@ -303,24 +303,24 @@ export default function NormalPqrsForm() {
           />
         </div>
 
-        <div className={styles.checkboxStack}>
-          <label className={styles.checkboxCard}>
-            <input type="checkbox" {...register('preferential_attention')} className={styles.checkbox} />
-            <span className={styles.checkboxText}>Atención preferencial</span>
+        <div className={styles.app__checkboxStack}>
+          <label className={styles.app__checkboxCard}>
+            <input type="checkbox" {...register('preferential_attention')} className={styles.app__checkbox} />
+            <span className={styles.app__checkboxText}>Atención preferencial</span>
           </label>
 
-          <label className={styles.checkboxCard}>
-            <input type="checkbox" {...register('information_request')} className={styles.checkbox} />
-            <span className={styles.checkboxText}>Es solicitud de información</span>
+          <label className={styles.app__checkboxCard}>
+            <input type="checkbox" {...register('information_request')} className={styles.app__checkbox} />
+            <span className={styles.app__checkboxText}>Es solicitud de información</span>
           </label>
 
-          <label className={styles.checkboxCard}>
-            <input type="checkbox" {...register('notifications')} className={styles.checkbox} />
-            <span className={styles.checkboxText}>Autoriza notificación por correo electrónico</span>
+          <label className={styles.app__checkboxCard}>
+            <input type="checkbox" {...register('notifications')} className={styles.app__checkbox} />
+            <span className={styles.app__checkboxText}>Autoriza notificación por correo electrónico</span>
           </label>
         </div>
 
-        <div className={styles.descriptionWrap}>
+        <div className={styles.app__descriptionWrap}>
           <TextareaField
             label="Descripción"
             id="description"
@@ -331,24 +331,24 @@ export default function NormalPqrsForm() {
           />
         </div>
 
-        <div className={styles.verificationBox}>
-          <label className={styles.checkboxCard}>
-            <input type="checkbox" {...register('accept_policy')} className={styles.checkbox} />
-            <span className={styles.verificationText}>
+        <div className={styles.app__verificationBox}>
+          <label className={styles.app__checkboxCard}>
+            <input type="checkbox" {...register('accept_policy')} className={styles.app__checkbox} />
+            <span className={styles.app__verificationText}>
               Acepto la política de tratamiento de datos.{' '}
               <Link href="/politica-tratamiento-datos" target="_blank" rel="noopener noreferrer">
                 Ver política
               </Link>
             </span>
           </label>
-          {errors.accept_policy && <p className={styles.errorText}>{String(errors.accept_policy.message)}</p>}
+          {errors.accept_policy && <p className={styles.app__errorText}>{String(errors.accept_policy.message)}</p>}
 
-          <label className={styles.checkboxCard}>
-            <input type="checkbox" {...register('verification_check')} className={styles.checkbox} />
-            <span className={styles.verificationText}>Campo de verificación</span>
+          <label className={styles.app__checkboxCard}>
+            <input type="checkbox" {...register('verification_check')} className={styles.app__checkbox} />
+            <span className={styles.app__verificationText}>Campo de verificación</span>
           </label>
           {errors.verification_check && (
-            <p className={styles.errorText}>{String(errors.verification_check.message)}</p>
+            <p className={styles.app__errorText}>{String(errors.verification_check.message)}</p>
           )}
         </div>
       </StepCard>
@@ -358,12 +358,12 @@ export default function NormalPqrsForm() {
         title="Nueva pestaña para documentos"
         subtitle="Adjunte documentos de soporte si lo requiere"
       >
-        <div className={styles.attachmentLinkWrap}>
+        <div className={styles.app__attachmentLinkWrap}>
           <Link
             href="/ManualDiligenciamiento.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.attachmentLink}
+            className={styles.app__attachmentLink}
           >
             Abrir manual de diligenciamiento (PDF)
             <ExternalLink size={14} />
@@ -372,7 +372,7 @@ export default function NormalPqrsForm() {
 
         <AttachmentRules />
 
-        <div className={styles.descriptionWrap}>
+        <div className={styles.app__descriptionWrap}>
           <AttachmentPicker
             files={attachments}
             setFiles={setAttachments}
@@ -383,16 +383,16 @@ export default function NormalPqrsForm() {
         </div>
       </StepCard>
 
-      <div className={`${styles.termsCard} ${errors.accept_terms ? styles.termsCardError : ''}`}>
-        <label className={styles.termsLabel}>
-          <input type="checkbox" {...register('accept_terms')} className={styles.termsCheckbox} />
-          <span className={styles.termsText}>Se aceptan los términos y condiciones.</span>
+      <div className={`${styles.app__termsCard} ${errors.accept_terms ? styles.app__termsCardError : ''}`}>
+        <label className={styles.app__termsLabel}>
+          <input type="checkbox" {...register('accept_terms')} className={styles.app__termsCheckbox} />
+          <span className={styles.app__termsText}>Se aceptan los términos y condiciones.</span>
         </label>
 
-        {errors.accept_terms && <p className={styles.errorText}>{String(errors.accept_terms.message)}</p>}
+        {errors.accept_terms && <p className={styles.app__errorText}>{String(errors.accept_terms.message)}</p>}
 
-        <div className={styles.actions}>
-          <button type="submit" disabled={status === 'submitting'} className={styles.submitNormal}>
+        <div className={styles.app__actions}>
+          <button type="submit" disabled={status === 'submitting'} className={styles.app__submitNormal}>
             {status === 'submitting' ? 'Procesando...' : 'Radicar PQRSD'}
             {status !== 'submitting' && <Send size={18} />}
           </button>
