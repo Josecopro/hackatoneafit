@@ -562,38 +562,7 @@ export default function App({ initialView = 'normal', allowSwitch = true }: AppP
       <HeroSection heroTitle={heroTitle} heroDescription={heroDescription} />
 
       <main id="main-content" className={styles.main}>
-        {allowSwitch ? (
-          <div role="tablist" aria-label="Tipo de radicación" className={styles.tabs}>
-            <button
-              onClick={() => setView('normal')}
-              id="tab-normal"
-              role="tab"
-              aria-controls="panel-normal"
-              aria-selected={view === 'normal'}
-              className={`${styles.tabButton} ${view === 'normal' ? styles.tabNormalActive : styles.tabInactive}`}
-            >
-              <Building2 size={18} className={view === 'normal' ? styles.iconNormalActive : ''} />
-              Persona normal
-            </button>
-            <button
-              onClick={() => setView('anon')}
-              id="tab-anon"
-              role="tab"
-              aria-controls="panel-anon"
-              aria-selected={view === 'anon'}
-              className={`${styles.tabButton} ${view === 'anon' ? styles.tabAnonActive : styles.tabInactive}`}
-            >
-              <Lock size={18} className={view === 'anon' ? styles.iconAnonActive : ''} />
-              Anónima
-            </button>
-          </div>
-        ) : (
-          <div className={styles.backWrap}>
-            <a href="/" className={styles.backLink}>
-              Volver al selector de pantallas
-            </a>
-          </div>
-        )}
+        
 
         <section
           id={view === 'normal' ? 'panel-normal' : 'panel-anon'}
