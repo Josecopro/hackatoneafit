@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  color: #0f172a;
+  color: var(--color-text-strong);
   padding: 3rem 1rem;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .description {
-  color: #475569;
+  color: var(--color-text-soft);
   max-width: 56rem;
   margin-top: 1rem;
   display: flex;
@@ -35,7 +35,7 @@
 
 .noteTitle {
   font-weight: 600;
-  color: #334155;
+  color: var(--color-text);
 }
 
 .noteList {
@@ -50,7 +50,7 @@
 .strongText {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-text-strong);
 }
 
 .cards {
@@ -61,35 +61,35 @@
 
 .card {
   text-align: left;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #e2e8f0;
+  background: rgba(var(--rgb-white), 0.95);
+  border: 1px solid var(--color-border);
   border-radius: 1.5rem;
   padding: 1.75rem;
-  box-shadow: 0 22px 50px -34px rgba(2, 43, 19, 0.5);
+  box-shadow: var(--shadow-card);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .card:hover {
-  box-shadow: 0 22px 60px -30px rgba(2, 43, 19, 0.55);
+  box-shadow: 0 22px 60px -30px rgba(var(--rgb-brand), 0.5);
   transition: all 0.2s ease;
 }
 
 
 .normalIcon {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-brand-100);
+  color: var(--color-brand-800);
 }
 
 .anonIcon {
-  background: #f1f5f9;
-  color: #1f2937;
+  background: var(--color-surface-muted);
+  color: var(--color-text-strong);
 }
 
 .cardTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-strong);
 }
 .cardCta {
   display: inline-flex;
@@ -97,17 +97,17 @@
   justify-content: center;
   border-radius: 0.75rem;
   padding: 0.75rem 1.25rem;
-  color: #fff;
+  color: var(--color-white);
   font-weight: 700;
   margin-top: 1rem;
 }
 
 .cardCtaNormal {
-  background: #047857;
+  background: var(--color-brand-700);
 }
 
 .cardCtaAnon {
-  background: #0f172a;
+  background: var(--color-brand-900);
 }
 
 .reqFormWrap {
@@ -130,8 +130,8 @@
   margin-top: 1.25rem;
   padding: 1rem;
   border-radius: 0.75rem;
-  border: 1px solid #a7f3d0;
-  background: #ecfdf5;
+  border: 1px solid var(--color-brand-200);
+  background: rgba(var(--rgb-brand), 0.08);
 }
 
 .policyLabel {
@@ -148,7 +148,7 @@
 
 .policyText {
   font-size: 0.875rem;
-  color: #064e3b;
+  color: var(--color-brand-800);
 }
 
 .policyLink {
@@ -171,14 +171,14 @@
   border: 0;
   border-radius: 0.75rem;
   padding: 0.75rem 1.25rem;
-  background: #047857;
-  color: #fff;
+  background: var(--color-brand-700);
+  color: var(--color-white);
   font-weight: 700;
   cursor: pointer;
 }
 
 .submitBtn:hover {
-  background: #065f46;
+  background: var(--color-brand-800);
 }
 
 @media (min-width: 768px) {

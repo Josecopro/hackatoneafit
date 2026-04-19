@@ -1,22 +1,63 @@
 @import "tailwindcss";
 
+:root {
+  --rgb-brand: 0, 58, 87;
+  --rgb-white: 255, 255, 255;
+
+  --color-white: #ffffff;
+  --color-brand-900: #002337;
+  --color-brand-800: #002e45;
+  --color-brand-700: #003a57;
+  --color-brand-600: #0b4d6a;
+  --color-brand-500: #1f6480;
+  --color-brand-400: #3f8099;
+  --color-brand-300: #6ea7bb;
+  --color-brand-200: #9ac4d3;
+  --color-brand-100: #c9e0e9;
+  --color-brand-50: #edf5f8;
+
+  --color-text-strong: #0f2f42;
+  --color-text: #274a5f;
+  --color-text-soft: #476b7f;
+  --color-text-muted: #6f8997;
+  --color-text-faint: #96adba;
+
+  --color-surface: #f3f8fb;
+  --color-surface-soft: #f7fbfd;
+  --color-surface-muted: #e9f1f5;
+
+  --color-border: #d3e0e7;
+  --color-border-strong: #a9c0cd;
+
+  --shadow-card: 0 22px 50px -34px rgba(var(--rgb-brand), 0.38);
+  --shadow-soft: 0 20px 36px -24px rgba(var(--rgb-brand), 0.26);
+  --shadow-tab: 0 20px 35px -24px rgba(var(--rgb-brand), 0.34);
+  --shadow-elevated: 0 8px 16px -12px rgba(var(--rgb-brand), 0.55);
+
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fca5a5;
+  --color-danger-ring: rgba(239, 68, 68, 0.18);
+}
+
 @theme {
-  --color-brand-green: #00904c;
-  --color-brand-green-deep: #066133;
-  --color-brand-ink: #0f172a;
-  --color-brand-surface: #f4f9f6;
-  --color-emerald-50: #ecfdf5;
-  --color-emerald-100: #d1fae5;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-emerald-700: #047857;
+  --color-brand-blue: var(--color-brand-700);
+  --color-brand-blue-deep: var(--color-brand-800);
+  --color-brand-ink: var(--color-text-strong);
+  --color-brand-surface: var(--color-surface);
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
   --font-display: 'Metropolis', sans-serif;
   --font-body: 'Arial', sans-serif;
 }
 
 body {
   font-family: var(--font-body);
-  background: radial-gradient(circle at top left, #f7fff8 0%, #f5f8f7 45%, #f2f5f4 100%);
+  background: radial-gradient(circle at top left, var(--color-brand-50) 0%, var(--color-surface-soft) 45%, var(--color-surface) 100%);
   color: var(--color-brand-ink);
 }
 
@@ -40,9 +81,9 @@ h1, h2, h3, h4, h5, h6 {
   left: 1rem;
   top: -100%;
   z-index: 100;
-  background: #ffffff;
-  border: 2px solid var(--color-brand-green-deep);
-  color: var(--color-brand-green-deep);
+  background: var(--color-white);
+  border: 2px solid var(--color-brand-blue-deep);
+  color: var(--color-brand-blue-deep);
   border-radius: 0.75rem;
   padding: 0.6rem 1rem;
   font-weight: 700;
@@ -53,7 +94,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-brand-green-deep);
+  outline: 2px solid var(--color-brand-blue-deep);
   outline-offset: 2px;
 }
 

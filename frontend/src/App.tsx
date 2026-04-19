@@ -452,17 +452,17 @@ const AnonymousPQRSD = () => {
       >
         <div className={styles.gridTwo}>
           <InputField
-            label="Correo electrónico"
+            label="Correo electrónico (opcional)"
             id="anon_email"
             type="email"
-            placeholder="Opcional"
+            placeholder="correo@ejemplo.com"
             error={errors.email}
             {...register('email')}
           />
           <InputField
-            label="Teléfono"
+            label="Teléfono (opcional)"
             id="anon_phone"
-            placeholder="Opcional"
+            placeholder="300 000 0000"
             error={errors.phone}
             {...register('phone')}
           />
@@ -482,13 +482,14 @@ const AnonymousPQRSD = () => {
             placeholder="Describa de forma precisa los hechos"
             rows={6}
             error={errors.description}
+            helperText="0 / 2000 caracteres"
             {...register('description')}
           />
         </div>
 
         <label className={styles.checkboxCard}>
           <input type="checkbox" {...register('authorize_information')} className={styles.checkbox} />
-          <span className={styles.checkboxText}>Checkbox para autorizar la información</span>
+          <span className={styles.checkboxText}>Autorizo el uso de esta información para el cumplimiento de las obligaciones legales.</span>
         </label>
         {errors.authorize_information && (
           <p className={styles.errorText}>{String(errors.authorize_information.message)}</p>
