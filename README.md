@@ -1,5 +1,5 @@
 HackatoneaFit — Rapid civic PQRSD intake + AI-assisted triage
--------------------------------------------------------------
+=============================================================
 
 A compact, production-oriented hackathon project built to demonstrate rapid problem-solving and an operational MVP: a decoupled web application for citizen petitions (PQRSD) with automated triage and draft generation powered by an agent-based LLM pipeline.
 
