@@ -60,7 +60,7 @@ The live application is available via the "About" section of this repository or:
 [https://hackatoneafit.vercel.app/]
 
 Requirements:
-- Python 3.11.9
+- Python 3.11.5
 - Node.js
 - Supabase project or local PostgreSQL with pgvector extension
 
