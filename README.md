@@ -98,8 +98,4 @@ Contributors
    - sanma613
    - Mariaisabel2
    - Mayday3003
-   - Josecopro    
-
-Contact & demo
---------------
-- To request a live demo or a hosted environment, contact the project owner (sanma613).
+   - Josecopro
