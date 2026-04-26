@@ -1,6 +1,3 @@
-README.md — HackatoneaFit
-=========================
-
 HackatoneaFit — Rapid civic PQRSD intake + AI-assisted triage
 -------------------------------------------------------------
 
