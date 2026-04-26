@@ -94,8 +94,7 @@ Operational notes & safety
 
 Contributors
 ----------------------
-- Hackathon authors:
-   - sanma613
-   - Mariaisabel2
-   - Mayday3003
-   - Josecopro
+- sanma613
+- Mariaisabel2
+- Mayday3003
+- Josecopro
