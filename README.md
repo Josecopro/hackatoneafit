@@ -90,7 +90,6 @@ Operational notes & safety
 - All AI-generated drafts are flagged for human review.
 - PII detection & redaction tools are applied to incoming payloads and drafts.
 - Limit attachments to 5 files, 10MB each.
-- Environment keys (Supabase service role key, GROQ_API_KEY) must be kept secret and not committed.
 
 Contributors
 ----------------------
