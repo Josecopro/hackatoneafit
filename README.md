@@ -93,13 +93,6 @@ Operational notes & safety
 - Limit attachments to 5 files, 10MB each (configured in backend).
 - Environment keys (Supabase service role key, GROQ_API_KEY) must be kept secret and not committed.
 
-Recommended follow-ups (short-term)
-----------------------------------
-- Move large binary demo assets out of the root into `docs/` or a GitHub release (see cleanup audit).
-- Add CI lint & unit tests for agent_flow functions (LLM fallback flows & PII redaction).
-- Add a `SECURITY.md` describing responsible disclosure and handling of PII.
-- Add an operations README for deployments and Supabase schema migration steps.
-
 Contributors & license
 ----------------------
 - Hackathon authors: (list contributors in repo)
@@ -107,5 +100,4 @@ Contributors & license
 
 Contact & demo
 --------------
-- Demo slides: `diapositivas.pdf` (presentation artifact)
 - To request a live demo or a hosted environment, contact the project owner (sanma613).
