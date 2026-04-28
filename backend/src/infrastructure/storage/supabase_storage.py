@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from typing import Any
 
 import httpx
@@ -95,11 +95,16 @@ class SupabaseStorageClient:
         path: str,
         expires_in: int = 3600,
     ) -> str:
-        if not path:
+        bucket_name = str(bucket or "").strip()
+        if not bucket_name:
+            raise SupabaseStorageError("No se pudo generar el enlace: bucket vacio.")
+
+        normalized_path = _normalize_storage_path(bucket_name, path)
+        if not normalized_path:
             raise SupabaseStorageError("No se pudo generar el enlace: ruta vacia.")
 
-        safe_path = quote(path, safe="/")
-        sign_url = f"{self._base_url}/storage/v1/object/sign/{bucket}/{safe_path}"
+        safe_path = quote(normalized_path, safe="/%")
+        sign_url = f"{self._base_url}/storage/v1/object/sign/{bucket_name}/{safe_path}"
         headers = {
             "apikey": self._service_role_key,
             "Authorization": f"Bearer {self._service_role_key}",
@@ -111,6 +116,18 @@ class SupabaseStorageClient:
             response = await client.post(sign_url, headers=headers, json=payload)
 
         if response.status_code >= 400:
+            detail = None
+            try:
+                body = response.json()
+            except ValueError:
+                body = None
+            if isinstance(body, dict):
+                detail = body.get("message") or body.get("error")
+            if detail:
+                raise SupabaseStorageError(
+                    "No fue posible generar el enlace del archivo: "
+                    f"{detail} (HTTP {response.status_code})."
+                )
             raise SupabaseStorageError(
                 f"No fue posible generar el enlace del archivo (HTTP {response.status_code})."
             )
@@ -161,3 +178,32 @@ def _get_file_extension(file_name: str) -> str:
         return ""
     extension = file_name[file_name.rfind(".") :].lower()
     return extension if len(extension) <= 10 else ""
+
+
+def _normalize_storage_path(bucket: str, path: str) -> str:
+    cleaned = str(path or "").strip()
+    if not cleaned:
+        return ""
+
+    if cleaned.startswith("http://") or cleaned.startswith("https://"):
+        parsed = urlparse(cleaned)
+        cleaned = parsed.path or ""
+
+    if "?" in cleaned:
+        cleaned = cleaned.split("?", 1)[0]
+
+    for prefix in (
+        "/storage/v1/object/sign/",
+        "/storage/v1/object/public/",
+        "/storage/v1/object/",
+    ):
+        if cleaned.startswith(prefix):
+            cleaned = cleaned[len(prefix) :]
+            break
+
+    cleaned = cleaned.lstrip("/")
+    bucket_prefix = f"{bucket}/"
+    if cleaned.startswith(bucket_prefix):
+        cleaned = cleaned[len(bucket_prefix) :]
+
+    return cleaned
