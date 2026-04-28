@@ -8,6 +8,7 @@ export interface PqrsAttachment {
   mimeType: string;
   size: number;
   url?: string;
+  urlError?: string;
 }
 
 export interface PqrsRecord {

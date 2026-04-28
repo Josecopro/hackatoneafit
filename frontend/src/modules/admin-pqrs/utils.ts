@@ -25,6 +25,7 @@ type AdminPqrsDetail = AdminPqrsListItem & {
     mimeType?: string;
     size?: number;
     url?: string;
+    urlError?: string;
   }>;
 };
 
@@ -106,6 +107,7 @@ export async function getPqrsById(id: string): Promise<PqrsRecord | null> {
         mimeType: String(file.mimeType || 'application/octet-stream'),
         size: Number(file.size || 0),
         url: typeof file.url === 'string' ? file.url : undefined,
+        urlError: typeof file.urlError === 'string' ? file.urlError : undefined,
       }))
     : [];
 

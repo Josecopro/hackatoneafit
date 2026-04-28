@@ -39,6 +39,8 @@ from src.infrastructure.storage.supabase_storage import (
     SupabaseStorageError,
 )
 
+SIGNED_URL_TTL_SECONDS = 60 * 60
+
 
 def build_app() -> FastAPI:
     settings = Settings()
@@ -440,16 +442,29 @@ def build_app() -> FastAPI:
             if not path:
                 continue
 
+            name = str(file.get("name") or "archivo")
+            size = int(file.get("size") or 0)
+            mime_type = str(file.get("mimeType") or "application/octet-stream")
+            url: str | None = None
+            url_error: str | None = None
+            try:
+                url = await storage.create_signed_url(
+                    bucket=bucket,
+                    path=path,
+                    expires_in=SIGNED_URL_TTL_SECONDS,
+                )
+            except SupabaseStorageError as exc:
+                url_error = str(exc)
+
             attachments.append(
                 {
                     "bucket": bucket,
                     "path": path,
-                    "name": str(file.get("name") or "archivo"),
-                    "size": int(file.get("size") or 0),
-                    "mimeType": str(
-                        file.get("mimeType") or "application/octet-stream"
-                    ),
-                    "url": f"{settings.supabase_url.rstrip('/')}/storage/v1/object/public/{bucket}/{path}",
+                    "name": name,
+                    "size": size,
+                    "mimeType": mime_type,
+                    "url": url,
+                    "urlError": url_error,
                 }
             )
 

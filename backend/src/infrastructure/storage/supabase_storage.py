@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from urllib.parse import quote
 from typing import Any
 
 import httpx
@@ -86,6 +87,50 @@ class SupabaseStorageClient:
             )
 
         return uploaded
+
+    async def create_signed_url(
+        self,
+        *,
+        bucket: str,
+        path: str,
+        expires_in: int = 3600,
+    ) -> str:
+        if not path:
+            raise SupabaseStorageError("No se pudo generar el enlace: ruta vacia.")
+
+        safe_path = quote(path, safe="/")
+        sign_url = f"{self._base_url}/storage/v1/object/sign/{bucket}/{safe_path}"
+        headers = {
+            "apikey": self._service_role_key,
+            "Authorization": f"Bearer {self._service_role_key}",
+            "Content-Type": "application/json",
+        }
+        payload = {"expiresIn": expires_in}
+
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.post(sign_url, headers=headers, json=payload)
+
+        if response.status_code >= 400:
+            raise SupabaseStorageError(
+                f"No fue posible generar el enlace del archivo (HTTP {response.status_code})."
+            )
+
+        body = response.json()
+        signed_url = (
+            body.get("signedURL")
+            or body.get("signedUrl")
+            or body.get("signed_url")
+        )
+        if not signed_url:
+            raise SupabaseStorageError(
+                "Supabase no retorno un enlace firmado para el archivo."
+            )
+
+        if signed_url.startswith("http"):
+            return signed_url
+        if signed_url.startswith("/"):
+            return f"{self._base_url}{signed_url}"
+        return f"{self._base_url}/{signed_url}"
 
     async def remove_attachments(self, attachments: list[dict[str, Any]]) -> None:
         if not attachments:

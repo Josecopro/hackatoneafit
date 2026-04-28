@@ -10,6 +10,7 @@ class AttachmentIn(BaseModel):
     size: int
     mimeType: str
     url: str | None = None
+    urlError: str | None = None
 
 
 class NormalPayloadIn(BaseModel):

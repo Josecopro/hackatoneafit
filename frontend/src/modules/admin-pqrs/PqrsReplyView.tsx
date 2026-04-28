@@ -11,6 +11,26 @@ type PqrsReplyViewProps = {
   record: PqrsRecord;
 };
 
+const FILE_SIZE_UNITS = ['B', 'KB', 'MB', 'GB'];
+
+function formatFileSize(value: number): string {
+  if (!Number.isFinite(value) || value <= 0) return '0 B';
+  const index = Math.min(Math.floor(Math.log(value) / Math.log(1024)), FILE_SIZE_UNITS.length - 1);
+  const normalized = value / 1024 ** index;
+  const formatted = normalized >= 10 || index === 0 ? normalized.toFixed(0) : normalized.toFixed(1);
+  return `${formatted} ${FILE_SIZE_UNITS[index]}`;
+}
+
+function buildDownloadUrl(url: string, name: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.set('download', name || 'archivo');
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
   const router = useRouter();
   const initialOfficialReply = useMemo(() => {
@@ -107,29 +127,61 @@ export default function PqrsReplyView({ record }: PqrsReplyViewProps) {
             </p>
 
             <div className={styles.adminViews__attachmentsSection}>
-              <p className={styles.adminViews__attachmentsTitle}>
-                <strong>Archivos adjuntos:</strong>
-              </p>
-              {record.attachments.length === 0 ? (
-                <p className={styles.adminViews__infoRow}>Esta PQRS no tiene archivos adjuntos.</p>
-              ) : (
-                <ul className={styles.adminViews__attachmentsList}>
+              <div className={styles.adminViews__attachmentsHeader}>
+                <div>
+                  <p className={styles.adminViews__attachmentsTitle}>
+                    <strong>Archivos adjuntos</strong>
+                  </p>
+                  <p className={styles.adminViews__attachmentsHint}>
+                    {record.attachments.length === 0
+                      ? 'Esta PQRS no tiene archivos adjuntos.'
+                      : `${record.attachments.length} archivo(s) cargados por el ciudadano.`}
+                  </p>
+                </div>
+                {record.attachments.length > 0 ? (
+                  <span className={styles.adminViews__attachmentsBadge}>Enlaces privados validos por 60 min</span>
+                ) : null}
+              </div>
+              {record.attachments.length === 0 ? null : (
+                <ul className={styles.adminViews__attachmentsGrid}>
                   {record.attachments.map((file) => {
-                    const href = file.url || '#';
+                    const downloadUrl = file.url ? buildDownloadUrl(file.url, file.name) : '';
                     return (
-                      <li key={file.path}>
-                        {file.url ? (
-                          <a
-                            className={styles.adminViews__attachmentLink}
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                      <li key={file.path} className={styles.adminViews__attachmentCard}>
+                        <div className={styles.adminViews__attachmentMeta}>
+                          <span className={styles.adminViews__attachmentName} title={file.name}>
                             {file.name}
-                          </a>
-                        ) : (
-                          <span className={styles.adminViews__attachmentUnavailable}>{file.name}</span>
-                        )}
+                          </span>
+                          <span className={styles.adminViews__attachmentDetails}>
+                            {formatFileSize(file.size)} · {file.mimeType || 'archivo'}
+                          </span>
+                        </div>
+                        <div className={styles.adminViews__attachmentActions}>
+                          {file.url ? (
+                            <>
+                              <a
+                                className={styles.adminViews__attachmentButton}
+                                href={file.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Ver
+                              </a>
+                              <a
+                                className={styles.adminViews__attachmentGhostButton}
+                                href={downloadUrl}
+                                download={file.name}
+                              >
+                                Descargar
+                              </a>
+                            </>
+                          ) : (
+                            <span className={styles.adminViews__attachmentUnavailable}>Enlace no disponible.</span>
+                          )}
+                        </div>
+                        {file.urlError ? (
+                          <p className={styles.adminViews__attachmentError}>{file.urlError}</p>
+                        ) : null}
                       </li>
                     );
                   })}
