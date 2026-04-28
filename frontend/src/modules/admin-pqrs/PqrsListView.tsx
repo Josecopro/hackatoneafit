@@ -28,7 +28,7 @@ export default function PqrsListView({ records }: PqrsListViewProps) {
       <div className={styles.adminViews__container}>
         <div className={styles.adminViews__topBar}>
           <span className={styles.adminViews__brand}>Administracion PQRSD</span>
-          <Link className={styles.adminViews__topLink} href="/api/admin/auth/logout">
+          <Link className={styles.adminViews__topLink} href="/api/admin/auth/logout" prefetch={false}>
             Cerrar sesion
           </Link>
         </div>
