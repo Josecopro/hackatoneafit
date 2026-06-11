@@ -176,13 +176,28 @@ export default function EntryFlowSelector() {
             />
 
             {suggestions.length > 0 && (
-              <div className={styles.entryFlow__popupSuggestionList}>
-                {suggestions.map((item) => (
-                  <article key={item.id} className={styles.entryFlow__popupSuggestionItem}>
-                    <p className={styles.entryFlow__popupSuggestionCase}>{item.caso_tipo || 'Caso relacionado'}</p>
-                    <p className={styles.entryFlow__popupSuggestionText}>{item.respuesta_validada}</p>
-                  </article>
-                ))}
+              <div className={styles.entryFlow__popupResultsWrap}>
+                <div className={styles.entryFlow__popupSummary}>
+                  <p className={styles.entryFlow__popupSummaryText}>
+                    Encontramos <strong>{suggestions.length}</strong> {suggestions.length === 1 ? 'resultado relacionado' : 'resultados relacionados'} con tu consulta. Revisa si alguna de las siguientes respuestas resuelve tu duda:
+                  </p>
+                </div>
+                <div className={styles.entryFlow__popupSuggestionList}>
+                  {suggestions.map((item) => (
+                    <article key={item.id} className={styles.entryFlow__popupSuggestionItem}>
+                      <div className={styles.entryFlow__popupSuggestionHeader}>
+                        <p className={styles.entryFlow__popupSuggestionCase}>{item.caso_tipo || 'Caso relacionado'}</p>
+                        {item.departamento_nombre && (
+                          <span className={styles.entryFlow__popupSuggestionDept}>{item.departamento_nombre}</span>
+                        )}
+                      </div>
+                      <div className={styles.entryFlow__popupSuggestionBody}>
+                        <span className={styles.entryFlow__popupAnswerLabel}>Respuesta:</span>
+                        <p className={styles.entryFlow__popupSuggestionText}>{item.respuesta_validada}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </div>
             )}
 

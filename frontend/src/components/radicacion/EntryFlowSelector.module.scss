@@ -111,8 +111,26 @@
   font-size: 0.85rem;
 }
 
-.entryFlow__popupSuggestionList {
+.entryFlow__popupResultsWrap {
   margin-top: 0.9rem;
+}
+
+.entryFlow__popupSummary {
+  padding: 0.75rem 1rem;
+  border-radius: 0.7rem;
+  border: 1px solid #22c55e;
+  background: #f0fdf4;
+  margin-bottom: 0.6rem;
+}
+
+.entryFlow__popupSummaryText {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #166534;
+  line-height: 1.5;
+}
+
+.entryFlow__popupSuggestionList {
   display: grid;
   gap: 0.6rem;
   max-height: 15rem;
@@ -121,22 +139,57 @@
 
 .entryFlow__popupSuggestionItem {
   border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-brand-700);
   border-radius: 0.7rem;
   padding: 0.7rem;
   background: var(--color-surface-soft);
+}
+
+.entryFlow__popupSuggestionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
 }
 
 .entryFlow__popupSuggestionCase {
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-brand-800);
-  margin: 0 0 0.3rem;
+  margin: 0;
+}
+
+.entryFlow__popupSuggestionDept {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  background: var(--color-surface-muted);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.entryFlow__popupSuggestionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.entryFlow__popupAnswerLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .entryFlow__popupSuggestionText {
   font-size: 0.9rem;
   color: var(--color-text-strong);
   margin: 0;
+  line-height: 1.5;
 }
 
 .entryFlow__popupNoResults {
