@@ -139,6 +139,21 @@
   margin: 0;
 }
 
+.entryFlow__popupNoResults {
+  margin-top: 0.9rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.7rem;
+  border: 1px solid #f59e0b;
+  background: #fffbeb;
+}
+
+.entryFlow__popupNoResultsText {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #92400e;
+  line-height: 1.5;
+}
+
 .entryFlow__container {
   max-width: 64rem;
   margin: 0 auto;

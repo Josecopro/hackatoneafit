@@ -38,6 +38,7 @@ export default function EntryFlowSelector() {
   const [suggestions, setSuggestions] = useState<QuickSuggestion[]>([]);
   const [isSearchingSuggestions, setIsSearchingSuggestions] = useState(false);
   const [showDecisionActions, setShowDecisionActions] = useState(false);
+  const [noResultsFound, setNoResultsFound] = useState(false);
   const [entryError, setEntryError] = useState('');
   const goToAnonymousFlow = () => {
     router.push('/radicacion/anonima');
@@ -63,6 +64,7 @@ export default function EntryFlowSelector() {
     setPendingFlowTarget(flowTarget);
     setShowSuggestionPopup(true);
     setShowDecisionActions(false);
+    setNoResultsFound(false);
     setSuggestions([]);
     setQueryText('');
   };
@@ -128,9 +130,11 @@ export default function EntryFlowSelector() {
       const rows = Array.isArray(json?.suggestions) ? (json.suggestions as QuickSuggestion[]) : [];
       setSuggestions(rows);
       if (rows.length > 0) {
+        setNoResultsFound(false);
         setShowDecisionActions(true);
       } else {
-        continueToSelectedFlow();
+        setNoResultsFound(true);
+        setShowDecisionActions(true);
       }
     } catch {
       continueToSelectedFlow();
@@ -143,6 +147,7 @@ export default function EntryFlowSelector() {
     setShowSuggestionPopup(false);
     setSuggestions([]);
     setShowDecisionActions(false);
+    setNoResultsFound(false);
   };
 
   return (
@@ -178,6 +183,14 @@ export default function EntryFlowSelector() {
                     <p className={styles.entryFlow__popupSuggestionText}>{item.respuesta_validada}</p>
                   </article>
                 ))}
+              </div>
+            )}
+
+            {noResultsFound && (
+              <div className={styles.entryFlow__popupNoResults}>
+                <p className={styles.entryFlow__popupNoResultsText}>
+                  No encontramos información relacionada con tu consulta. Puedes continuar con la radicación de tu PQRS.
+                </p>
               </div>
             )}
 
