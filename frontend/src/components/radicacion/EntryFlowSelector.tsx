@@ -167,13 +167,15 @@ export default function EntryFlowSelector() {
             <p className={styles.entryFlow__popupText}>
               Escribe una breve descripción de tu duda o consulta y te mostraremos información relevante que ya esté disponible en nuestro portal.
             </p>
-            <input
-              type="text"
-              className={styles.entryFlow__popupInput}
-              placeholder="Ejemplo: ¿Cómo puedo cambiar mi dirección de residencia?"
-              value={queryText}
-              onChange={(event) => setQueryText(event.target.value)}
-            />
+            {!noResultsFound && (
+              <input
+                type="text"
+                className={styles.entryFlow__popupInput}
+                placeholder="Ejemplo: ¿Cómo puedo cambiar mi dirección de residencia?"
+                value={queryText}
+                onChange={(event) => setQueryText(event.target.value)}
+              />
+            )}
 
             {suggestions.length > 0 && (
               <div className={styles.entryFlow__popupResultsWrap}>
